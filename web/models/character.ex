@@ -5,6 +5,7 @@ defmodule D20CharacterKeeper.Character do
     field :name, :string
     field :player, :string
     field :character_level, :integer
+    has_many :fields, D20CharacterKeeper.Field
 
     timestamps()
   end

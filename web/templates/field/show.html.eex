@@ -1,0 +1,23 @@
+<h2>Show field</h2>
+
+<ul>
+
+  <li>
+    <strong>Character:</strong>
+    <%= @field.character_id %>
+  </li>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @field.name %>
+  </li>
+
+  <li>
+    <strong>Value:</strong>
+    <%= @field.value %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: field_path(@conn, :edit, @field) %>
+<%= link "Back", to: field_path(@conn, :index) %>

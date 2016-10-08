@@ -1,0 +1,30 @@
+<h2>Listing fields</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Character</th>
+      <th>Name</th>
+      <th>Value</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for field <- @fields do %>
+    <tr>
+      <td><%= field.character_id %></td>
+      <td><%= field.name %></td>
+      <td><%= field.value %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: field_path(@conn, :show, field), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: field_path(@conn, :edit, field), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: field_path(@conn, :delete, field), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New field", to: field_path(@conn, :new) %>

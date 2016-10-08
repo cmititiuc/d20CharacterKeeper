@@ -26,12 +26,12 @@ characters
   name: string
 
 fields
-  character: ref
+  character_id:references:characters
   name: string
-  value: int
+  value: integer
 
 modifiers
-  field: ref
-  value: int
+  field_id:references:fields
+  value: integer
   description: string
 ```

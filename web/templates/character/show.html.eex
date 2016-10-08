@@ -1,7 +1,6 @@
 <h2>Show character</h2>
 
 <ul>
-
   <li>
     <strong>Name:</strong>
     <%= @character.name %>
@@ -16,7 +15,12 @@
     <strong>Character level:</strong>
     <%= @character.character_level %>
   </li>
+</ul>
 
+<ul>
+  <%= for field <- @character.fields do %>
+    <li><%= field.name %>: <%= field.value %></li>
+  <% end %>
 </ul>
 
 <%= link "Edit", to: character_path(@conn, :edit, @character) %>

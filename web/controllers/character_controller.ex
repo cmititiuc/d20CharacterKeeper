@@ -27,7 +27,7 @@ defmodule D20CharacterKeeper.CharacterController do
   end
 
   def show(conn, %{"id" => id}) do
-    character = Repo.get!(Character, id)
+    character = Repo.get!(Character, id) |> Repo.preload(:fields)
     render(conn, "show.html", character: character)
   end
 
