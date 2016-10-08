@@ -1,0 +1,23 @@
+<h2>Show character</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @character.name %>
+  </li>
+
+  <li>
+    <strong>Player:</strong>
+    <%= @character.player %>
+  </li>
+
+  <li>
+    <strong>Character level:</strong>
+    <%= @character.character_level %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: character_path(@conn, :edit, @character) %>
+<%= link "Back", to: character_path(@conn, :index) %>

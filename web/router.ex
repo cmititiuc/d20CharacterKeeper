@@ -16,6 +16,7 @@ defmodule D20CharacterKeeper.Router do
   scope "/", D20CharacterKeeper do
     pipe_through :browser # Use the default browser stack
 
+    resources "/characters", CharacterController
     get "/", PageController, :index
   end
 

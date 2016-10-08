@@ -1,0 +1,30 @@
+<h2>Listing characters</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Player</th>
+      <th>Character level</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for character <- @characters do %>
+    <tr>
+      <td><%= character.name %></td>
+      <td><%= character.player %></td>
+      <td><%= character.character_level %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: character_path(@conn, :show, character), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: character_path(@conn, :edit, character), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: character_path(@conn, :delete, character), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New character", to: character_path(@conn, :new) %>
