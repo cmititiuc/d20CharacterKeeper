@@ -42,8 +42,12 @@ defmodule D20CharacterKeeper.CharacterController do
       Enum.map_reduce(character.fields, %{}, fn(field, acc) ->
         field_values = %{field.name => %{
           modified_value: Field.modified_value(field),
-          value: field.value
+          value: field.value,
+          modifiers: Enum.map(field.modifiers, fn(m) ->
+            "#{m.value} #{if m.description, do: "(#{m.description})"}"
+          end)
         }}
+
         {field, Map.merge(acc, field_values)}
       end)
     params = %{character: character, fields: fields, abilities: @abilities}

@@ -17,6 +17,7 @@ table class="table" id="ability-scores"
     tr
       th Ability Score
       th Base Score
+      th Modifiers
       th Modified Score
   tbody
     = for {ability, abbrev} <- @abilities do
@@ -24,6 +25,9 @@ table class="table" id="ability-scores"
       tr
         td= abbrev
         td= if @fields["#{ability}"], do: @fields["#{ability}"].value
+        td
+          = if @fields["#{ability}"] do
+            = @fields["#{ability}"].modifiers |> Enum.join(", ")
         td= if @fields["#{ability}"], do: @fields["#{ability}"].modified_value
 
 = link "Edit", to: character_path(@conn, :edit, @character)
