@@ -1,0 +1,30 @@
+<h2>Listing modifiers</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+      <th>Description</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for modifier <- @modifiers do %>
+    <tr>
+      <td><%= modifier.field_id %></td>
+      <td><%= modifier.value %></td>
+      <td><%= modifier.description %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: modifier_path(@conn, :show, modifier), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: modifier_path(@conn, :edit, modifier), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: modifier_path(@conn, :delete, modifier), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New modifier", to: modifier_path(@conn, :new) %>

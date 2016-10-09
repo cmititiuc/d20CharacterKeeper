@@ -23,15 +23,17 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
 
 ```
 characters
-  name: string
+  name:string
+  player:string
+  character_level:integer
 
 fields
   character_id:references:characters
-  name: string
-  value: integer
+  name:string
+  value:integer
 
 modifiers
   field_id:references:fields
-  value: integer
-  description: string
+  value:integer
+  description:string
 ```

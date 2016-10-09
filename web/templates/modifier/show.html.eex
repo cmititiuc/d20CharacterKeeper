@@ -1,0 +1,23 @@
+<h2>Show modifier</h2>
+
+<ul>
+
+  <li>
+    <strong>Field:</strong>
+    <%= @modifier.field_id %>
+  </li>
+
+  <li>
+    <strong>Value:</strong>
+    <%= @modifier.value %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @modifier.description %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: modifier_path(@conn, :edit, @modifier) %>
+<%= link "Back", to: modifier_path(@conn, :index) %>

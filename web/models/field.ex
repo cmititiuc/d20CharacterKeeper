@@ -5,6 +5,7 @@ defmodule D20CharacterKeeper.Field do
     field :name, :string
     field :value, :integer
     belongs_to :character, D20CharacterKeeper.Character
+    has_many :modifiers, D20CharacterKeeper.Modifier
 
     timestamps()
   end

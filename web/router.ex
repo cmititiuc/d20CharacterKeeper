@@ -18,6 +18,7 @@ defmodule D20CharacterKeeper.Router do
 
     resources "/characters", CharacterController
     resources "/fields", FieldController
+    resources "/modifiers", ModifierController
     get "/", PageController, :index
   end
 
