@@ -16,7 +16,9 @@ html lang="en"
         nav role="navigation"
           ul.nav.nav-pills.pull-right
             li
-              a href="http://www.phoenixframework.org/docs" Get Started
+              a href="#{character_path(@conn, :index)}" Characters
+            li
+              a href="#{field_path(@conn, :index)}" Fields
         span.logo
 
       p.alert.alert-info role="alert"= get_flash(@conn, :info)
