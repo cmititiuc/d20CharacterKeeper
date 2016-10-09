@@ -2,7 +2,8 @@ import $ from "jquery"
 
 // delete the 2 fields above the parent
 // and then delete the parent also
-function remove_modifier() {
+function remove_modifier(e) {
+  e.preventDefault()
   var parent = $(this).parent()
   parent.prev().remove()
   parent.prev().remove()
@@ -10,7 +11,8 @@ function remove_modifier() {
   renumber_modifiers()
 }
 
-function add_modifier() {
+function add_modifier(e) {
+  e.preventDefault()
   var parent = $('#modifiers')
   parent.append(
     '<div class="form-group">' +
@@ -23,7 +25,7 @@ function add_modifier() {
   )
   parent.append(
     '<div style="text-align: right; clear: both;">' +
-    '<span class="remove-modifier">- Remove</span></div>'
+    '<a href="#" class="remove-modifier">− Remove</a></div>'
   )
   renumber_modifiers()
 }
