@@ -41,9 +41,9 @@ defmodule D20CharacterKeeper.FieldController do
     characters =
       Repo.all(Character) |> Enum.map(&({&1.name, &1.id})) |> Enum.into(%{})
     changeset = Field.changeset(field)
-    params = %{field: field, changeset: changeset, characters: characters}
+    locals = %{field: field, changeset: changeset, characters: characters}
 
-    render(conn, "edit.html", params)
+    render(conn, "edit.html", locals)
   end
 
   def update(conn, %{"id" => id, "field" => field_params}) do
@@ -51,7 +51,6 @@ defmodule D20CharacterKeeper.FieldController do
     characters =
       Repo.all(Character) |> Enum.map(&({&1.name, &1.id})) |> Enum.into(%{})
     changeset = Field.changeset(field, field_params)
-    params = %{field: field, changeset: changeset, characters: characters}
 
     case Repo.update(changeset) do
       {:ok, field} ->
@@ -59,7 +58,8 @@ defmodule D20CharacterKeeper.FieldController do
         |> put_flash(:info, "Field updated successfully.")
         |> redirect(to: field_path(conn, :show, field))
       {:error, changeset} ->
-        render(conn, "edit.html", params)
+        locals = %{field: field, changeset: changeset, characters: characters}
+        render(conn, "edit.html", locals)
     end
   end
 
