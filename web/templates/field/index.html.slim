@@ -1,0 +1,34 @@
+h2 Listing fields
+
+table class="table"
+  thead
+    tr
+      th Character
+      th Name
+      th Value
+
+      th
+  tbody
+    = for field <- @fields do
+
+      tr
+        td = field.character.name
+        td = field.name
+        td = field.value
+
+        td class="text-right"
+          = link "Show",
+            to: field_path(@conn, :show, field),
+            class: "btn btn-default btn-xs"
+          '
+          = link "Edit",
+            to: field_path(@conn, :edit, field),
+            class: "btn btn-default btn-xs"
+          '
+          = link "Delete",
+            to: field_path(@conn, :delete, field),
+            method: :delete,
+            data: [confirm: "Are you sure?"],
+            class: "btn btn-danger btn-xs"
+
+= link "New field", to: field_path(@conn, :new)

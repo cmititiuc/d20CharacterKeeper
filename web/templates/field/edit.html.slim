@@ -1,0 +1,8 @@
+h2 Edit field
+
+= render "form.html",
+  changeset: @changeset,
+  action: field_path(@conn, :update, @field),
+  characters: @characters
+
+= link "Back", to: field_path(@conn, :index)

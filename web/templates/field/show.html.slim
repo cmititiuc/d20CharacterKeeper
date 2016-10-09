@@ -1,0 +1,15 @@
+h2 Show field
+
+ul
+  li
+    strong> Character:
+    = @field.character.name
+  li
+    strong> Name:
+    = @field.name
+  li
+    strong> Value:
+    = @field.value
+= link "Edit", to: field_path(@conn, :edit, @field)
+'  |
+= link "Back", to: field_path(@conn, :index)
