@@ -1,0 +1,37 @@
+h2 Show character
+
+p
+  strong> Name:
+  = @character.name
+  
+p
+  strong> Player:
+  = @character.player
+
+p
+  strong> Character level:
+  = @character.character_level
+
+table id="ability-scores"
+  tr 
+    td STR
+    td = @fields["strength"]
+  tr 
+    td DEX
+    td = @fields["dexterity"]
+  tr 
+    td CON
+    td = @fields["constitution"]
+  tr 
+    td INT
+    td = @fields["intelligence"]
+  tr 
+    td WIS
+    td = @fields["wisdom"]
+  tr
+    td CHA
+    td = @fields["charisma"]
+
+= link "Edit", to: character_path(@conn, :edit, @character)
+'  |
+= link "Back", to: character_path(@conn, :index)
