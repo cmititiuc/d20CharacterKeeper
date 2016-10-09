@@ -39,6 +39,7 @@ defmodule D20CharacterKeeper.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:phoenix_slime, "~> 0.8.0"},
+      {:apex, "~>0.5.2"},
     ]
   end
 

@@ -2,7 +2,9 @@ defmodule D20CharacterKeeper.FieldControllerTest do
   use D20CharacterKeeper.ConnCase
 
   alias D20CharacterKeeper.Field
-  @valid_attrs %{name: "some content", value: 42}
+  alias D20CharacterKeeper.Character
+
+  @character_struct %Character{name: "Zr", player: "Cl", character_level: 123}
   @invalid_attrs %{}
 
   test "lists all entries on index", %{conn: conn} do
@@ -16,9 +18,11 @@ defmodule D20CharacterKeeper.FieldControllerTest do
   end
 
   test "creates resource and redirects when data is valid", %{conn: conn} do
-    conn = post conn, field_path(conn, :create), field: @valid_attrs
+    character = Repo.insert! @character_struct
+    valid_attrs = %{name: "some content", value: 42, character_id: character.id}
+    conn = post conn, field_path(conn, :create), field: valid_attrs
     assert redirected_to(conn) == field_path(conn, :index)
-    assert Repo.get_by(Field, @valid_attrs)
+    assert Repo.get_by(Field, valid_attrs)
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
@@ -27,7 +31,7 @@ defmodule D20CharacterKeeper.FieldControllerTest do
   end
 
   test "shows chosen resource", %{conn: conn} do
-    field = Repo.insert! %Field{}
+    field = Repo.insert! %Field{character: @character_struct}
     conn = get conn, field_path(conn, :show, field)
     assert html_response(conn, 200) =~ "Show field"
   end
@@ -45,10 +49,12 @@ defmodule D20CharacterKeeper.FieldControllerTest do
   end
 
   test "updates chosen resource and redirects when data is valid", %{conn: conn} do
+    character = Repo.insert! @character_struct
     field = Repo.insert! %Field{}
-    conn = put conn, field_path(conn, :update, field), field: @valid_attrs
+    valid_attrs = %{name: "some content", value: 42, character_id: character.id}
+    conn = put conn, field_path(conn, :update, field), field: valid_attrs
     assert redirected_to(conn) == field_path(conn, :show, field)
-    assert Repo.get_by(Field, @valid_attrs)
+    assert Repo.get_by(Field, valid_attrs)
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do

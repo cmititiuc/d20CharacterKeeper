@@ -18,6 +18,8 @@ defmodule D20CharacterKeeper.FieldController do
 
   def create(conn, %{"field" => field_params}) do
     changeset = Field.changeset(%Field{}, field_params)
+    characters =
+      Repo.all(Character) |> Enum.map(&({&1.name, &1.id})) |> Enum.into(%{})
 
     case Repo.insert(changeset) do
       {:ok, _field} ->
@@ -25,7 +27,7 @@ defmodule D20CharacterKeeper.FieldController do
         |> put_flash(:info, "Field created successfully.")
         |> redirect(to: field_path(conn, :index))
       {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, characters: characters)
     end
   end
 
@@ -35,7 +37,7 @@ defmodule D20CharacterKeeper.FieldController do
   end
 
   def edit(conn, %{"id" => id}) do
-    field = Repo.get!(Field, id)
+    field = Repo.get!(Field, id) |> Repo.preload(:character)
     characters =
       Repo.all(Character) |> Enum.map(&({&1.name, &1.id})) |> Enum.into(%{})
     changeset = Field.changeset(field)
@@ -45,8 +47,11 @@ defmodule D20CharacterKeeper.FieldController do
   end
 
   def update(conn, %{"id" => id, "field" => field_params}) do
-    field = Repo.get!(Field, id)
+    field = Repo.get!(Field, id) |> Repo.preload(:character)
+    characters =
+      Repo.all(Character) |> Enum.map(&({&1.name, &1.id})) |> Enum.into(%{})
     changeset = Field.changeset(field, field_params)
+    params = %{field: field, changeset: changeset, characters: characters}
 
     case Repo.update(changeset) do
       {:ok, field} ->
@@ -54,7 +59,7 @@ defmodule D20CharacterKeeper.FieldController do
         |> put_flash(:info, "Field updated successfully.")
         |> redirect(to: field_path(conn, :show, field))
       {:error, changeset} ->
-        render(conn, "edit.html", field: field, changeset: changeset)
+        render(conn, "edit.html", params)
     end
   end
 
