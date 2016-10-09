@@ -1,4 +1,6 @@
-#ability-scores tr td {
-  padding: 2px;
-  text-align: center;
+#ability-scores tr {
+  td, th {
+    padding: 2px;
+    text-align: center;
+  }
 }

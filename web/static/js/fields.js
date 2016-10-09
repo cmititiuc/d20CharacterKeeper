@@ -16,12 +16,13 @@ function add_modifier(e) {
   var parent = $('#modifiers')
   parent.append(
     '<div class="form-group">' +
-    '<label class="control-label" for="field_modifiers_0_value">Value</label>' +
-    '<input class="form-control" id="field_modifiers_0_value" name="field[modifiers][0][value]" type="number"></div>'
+    '<label class="control-label" for="">Value</label>' +
+    '<input class="form-control" id="" name="" type="number"></div>'
   )
   parent.append(
-    '<div class="form-group"><label class="control-label" for="field_modifiers_0_description">Description</label>' +
-    '<input class="form-control" id="field_modifiers_0_description" name="field[modifiers][0][description]" type="text"></div>'
+    '<div class="form-group">' +
+    '<label class="control-label" for="">Description</label>' +
+    '<input class="form-control" id="" name="" type="text"></div>'
   )
   parent.append(
     '<div style="text-align: right; clear: both;">' +
@@ -33,13 +34,15 @@ function add_modifier(e) {
 function renumber_modifiers() {
   $('#modifiers .form-group:even').each(function(i) {
     $(this).children('label').attr('for', 'field_modifiers_' + i + '_value')
-    $(this).children('input').attr('id', 'field_modifiers_' + i + '_value')
-    $(this).children('input').attr('name', 'field[modifiers][' + i + '][value]')
+    $(this).children('input')
+      .attr('id', 'field_modifiers_' + i + '_value')
+      .attr('name', 'field[modifiers][' + i + '][value]')
   })
   $('#modifiers .form-group:odd').each(function(i) {
     $(this).children('label').attr('for', 'field_modifiers_' + i + '_description')
-    $(this).children('input').attr('id', 'field_modifiers_' + i + '_description')
-    $(this).children('input').attr('name', 'field[modifiers][' + i + '][description]')
+    $(this).children('input')
+      .attr('id', 'field_modifiers_' + i + '_description')
+      .attr('name', 'field[modifiers][' + i + '][description]')
   })
 }
 

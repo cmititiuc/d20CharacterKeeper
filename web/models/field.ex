@@ -10,6 +10,15 @@ defmodule D20CharacterKeeper.Field do
     timestamps()
   end
 
+  def modified_value(field) do
+    {_output, result} =
+      Enum.map_reduce(field.modifiers, field.value, fn(m, acc) ->
+        {m.value, m.value + acc}
+      end)
+
+    result
+  end
+
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """

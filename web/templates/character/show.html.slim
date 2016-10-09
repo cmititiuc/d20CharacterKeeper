@@ -12,25 +12,19 @@ p
   strong> Character level:
   = @character.character_level
 
-table id="ability-scores"
-  tr 
-    td STR
-    td = @fields["strength"]
-  tr 
-    td DEX
-    td = @fields["dexterity"]
-  tr 
-    td CON
-    td = @fields["constitution"]
-  tr 
-    td INT
-    td = @fields["intelligence"]
-  tr 
-    td WIS
-    td = @fields["wisdom"]
-  tr
-    td CHA
-    td = @fields["charisma"]
+table class="table" id="ability-scores"
+  thead
+    tr
+      th Ability Score
+      th Base Score
+      th Modified Score
+  tbody
+    = for {ability, abbrev} <- @abilities do
+
+      tr
+        td= abbrev
+        td= if @fields["#{ability}"], do: @fields["#{ability}"].value
+        td= if @fields["#{ability}"], do: @fields["#{ability}"].modified_value
 
 = link "Edit", to: character_path(@conn, :edit, @character)
 '  |
