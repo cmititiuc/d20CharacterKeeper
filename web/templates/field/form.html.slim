@@ -8,16 +8,44 @@
     = label f, :name, class: "control-label"
     = text_input f, :name, class: "form-control"
     = error_tag f, :name
-
   div class="form-group"
     = label f, :value, class: "control-label"
     = number_input f, :value, class: "form-control"
     = error_tag f, :value
-
   div class="form-group"
     = label f, :character_id, class: "control-label"
     = select f, :character_id, @characters, class: "form-control"
     = error_tag f, :character_id
+
+  hr
+  h4 Modifiers
+  br
+
+  #modifiers
+    = inputs_for f, :modifiers, fn m ->
+
+      div class="form-group"
+        = label m, :value, class: "control-label"
+        = number_input m, :value, class: "form-control"
+        = error_tag m, :value
+      div class="form-group"
+        = label m, :description, class: "control-label"
+        = text_input m, :description, class: "form-control"
+        = error_tag m, :description
+      = if m.data.id do
+
+        div style="text-align: right;"
+          = label m, :delete, "Delete?", class: "control-label"
+          '
+          = checkbox m, :delete
+      - else
+
+        div style="text-align: right;"
+          span class="remove-modifier"
+            | - Remove
+
+  div style="text-align: right; clear: both;"
+    span id="add-modifier" + Add Modifier
 
   div class="form-group"
     = submit "Submit", class: "btn btn-primary"

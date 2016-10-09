@@ -2,7 +2,6 @@ defmodule D20CharacterKeeper.FieldTest do
   use D20CharacterKeeper.ModelCase
 
   alias D20CharacterKeeper.Field
-  alias D20CharacterKeeper.Character
 
   @valid_attrs %{name: "some content", value: 42, character_id: 123}
   @invalid_attrs %{}

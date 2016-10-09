@@ -16,6 +16,7 @@ defmodule D20CharacterKeeper.Field do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name, :value, :character_id])
+    |> cast_assoc(:modifiers)
     |> validate_required([:name, :value, :character_id])
   end
 end

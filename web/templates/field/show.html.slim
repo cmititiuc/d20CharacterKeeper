@@ -1,15 +1,28 @@
 h2 Show field
 
+strong> Character:
+= @field.character.name
+
 ul
-  li
-    strong> Character:
-    = @field.character.name
   li
     strong> Name:
     = @field.name
   li
     strong> Value:
     = @field.value
+
+h4 Modifiers
+
+ul
+  = for modifier <- @field.modifiers do
+
+    li
+      strong> Value:
+      = modifier.value
+      ' ,
+      strong> Description:
+      = modifier.description
+
 = link "Edit", to: field_path(@conn, :edit, @field)
 '  |
 = link "Back", to: field_path(@conn, :index)

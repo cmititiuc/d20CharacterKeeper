@@ -32,12 +32,12 @@ defmodule D20CharacterKeeper.FieldController do
   end
 
   def show(conn, %{"id" => id}) do
-    field = Repo.get!(Field, id) |> Repo.preload(:character)
+    field = Repo.get!(Field, id) |> Repo.preload([:character, :modifiers])
     render(conn, "show.html", field: field)
   end
 
   def edit(conn, %{"id" => id}) do
-    field = Repo.get!(Field, id) |> Repo.preload(:character)
+    field = Repo.get!(Field, id) |> Repo.preload([:character, :modifiers])
     characters =
       Repo.all(Character) |> Enum.map(&({&1.name, &1.id})) |> Enum.into(%{})
     changeset = Field.changeset(field)
@@ -47,7 +47,7 @@ defmodule D20CharacterKeeper.FieldController do
   end
 
   def update(conn, %{"id" => id, "field" => field_params}) do
-    field = Repo.get!(Field, id) |> Repo.preload(:character)
+    field = Repo.get!(Field, id) |> Repo.preload([:character, :modifiers])
     characters =
       Repo.all(Character) |> Enum.map(&({&1.name, &1.id})) |> Enum.into(%{})
     changeset = Field.changeset(field, field_params)
