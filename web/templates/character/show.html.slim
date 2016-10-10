@@ -19,6 +19,7 @@ table class="table" id="ability-scores"
       th Base Score
       th Modifiers
       th Modified Score
+      th Ability Modifiers
   tbody
     = for {ability, abbrev} <- @abilities do
 
@@ -29,6 +30,10 @@ table class="table" id="ability-scores"
           = if @fields["#{ability}"] do
             = @fields["#{ability}"].modifiers |> Enum.join(", ")
         td= if @fields["#{ability}"], do: @fields["#{ability}"].modified_value
+        td
+          = if @fields["#{ability}"] do
+            - mod_fn = fn(v) -> (v * 0.5 - 5) |> Float.floor |> round end
+            = mod_fn.(@fields["#{ability}"].modified_value)
 
 = link "Edit", to: character_path(@conn, :edit, @character)
 '  |
