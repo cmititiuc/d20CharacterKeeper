@@ -15,25 +15,25 @@ p
 table class="table" id="ability-scores"
   thead
     tr
-      th Ability Score
-      th Base Score
-      th Modifiers
+      th Ability
       th Modified Score
       th Ability Modifiers
+      th Base Score
+      th Modifiers
   tbody
     = for {ability, abbrev} <- @abilities do
 
       tr
         td= abbrev
+        td= if @fields["#{ability}"], do: @fields["#{ability}"].modified_value
+        td
+          = if @fields["#{ability}"] do
+            - mod_fn = fn v -> (v * 0.5 - 5) |> Float.floor |> round end
+            = mod_fn.(@fields["#{ability}"].modified_value)
         td= if @fields["#{ability}"], do: @fields["#{ability}"].value
         td
           = if @fields["#{ability}"] do
             = @fields["#{ability}"].modifiers |> Enum.join(", ")
-        td= if @fields["#{ability}"], do: @fields["#{ability}"].modified_value
-        td
-          = if @fields["#{ability}"] do
-            - mod_fn = fn(v) -> (v * 0.5 - 5) |> Float.floor |> round end
-            = mod_fn.(@fields["#{ability}"].modified_value)
 
 = link "Edit", to: character_path(@conn, :edit, @character)
 '  |

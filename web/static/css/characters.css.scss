@@ -3,4 +3,9 @@
     padding: 2px;
     text-align: center;
   }
+  > td:nth-child(4), th:nth-child(4), > td:nth-child(5), th:nth-child(5) {
+    font-size: small;
+    color: #999;
+    background-color: #f6f6f6;
+  }
 }
