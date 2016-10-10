@@ -16,6 +16,7 @@ defmodule D20CharacterKeeper.Character do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name, :player, :character_level])
+    |> cast_assoc(:fields)
     |> validate_required([:name, :player, :character_level])
   end
 end

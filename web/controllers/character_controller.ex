@@ -56,13 +56,13 @@ defmodule D20CharacterKeeper.CharacterController do
   end
 
   def edit(conn, %{"id" => id}) do
-    character = Repo.get!(Character, id)
+    character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
     changeset = Character.changeset(character)
     render(conn, "edit.html", character: character, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "character" => character_params}) do
-    character = Repo.get!(Character, id)
+    character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
     changeset = Character.changeset(character, character_params)
 
     case Repo.update(changeset) do

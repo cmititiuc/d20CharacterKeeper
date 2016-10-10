@@ -1,0 +1,8 @@
+h2 Edit character
+
+= render "form.html",
+  changeset: @changeset,
+  action: character_path(@conn, :update, @character),
+  character: @character
+
+= link "Back", to: character_path(@conn, :index)
