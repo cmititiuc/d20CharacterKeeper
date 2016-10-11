@@ -1,6 +1,11 @@
 defmodule D20CharacterKeeper.Character do
   use D20CharacterKeeper.Web, :model
 
+  import Ecto.Query
+  alias D20CharacterKeeper.Repo
+  alias D20CharacterKeeper.Character
+  alias D20CharacterKeeper.Field
+
   schema "characters" do
     field :name, :string
     field :player, :string
@@ -8,6 +13,24 @@ defmodule D20CharacterKeeper.Character do
     has_many :fields, D20CharacterKeeper.Field, on_delete: :delete_all
 
     timestamps()
+  end
+
+  def get_field!(id, field_name) do
+    query =
+      from f in Field,
+      where: f.character_id == ^id and f.name == ^field_name
+
+    Repo.one(query)
+  end
+
+  def get_abilities!(id) do
+    abilities = ~w(strength dexterity constitution intelligence wisdom charisma)
+    query =
+      from f in Field,
+      where: f.character_id == ^id,
+      where: f.name in ^abilities
+
+    Repo.all(query)
   end
 
   @doc """

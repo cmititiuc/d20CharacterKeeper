@@ -3,6 +3,9 @@ h2 Edit character
 = render "form.html",
   changeset: @changeset,
   action: character_path(@conn, :update, @character),
-  character: @character
+  character: @character,
+  stats: @stats
 
+= link "Cancel", to: character_path(@conn, :show, @character)
+'  |
 = link "Back", to: character_path(@conn, :index)

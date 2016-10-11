@@ -1,60 +1,77 @@
-= form_for @changeset, @action, fn f ->
+= form_for @changeset, @action, fn c ->
   = if @changeset.action do
 
     div class="alert alert-danger"
       p Oops, something went wrong! Please check the errors below.
 
-  div class="form-group"
-    = label f, :name, class: "control-label"
-    = text_input f, :name, class: "form-control"
-    = error_tag f, :name
+  table
+    tr
+      td style="padding: 3px"= label c, :name, class: "control-label"
+      td style="padding: 3px"
+        = text_input c, :name, class: "form-control"
+        = error_tag c, :name
+    tr
+      td style="padding: 3px"= label c, :player, class: "control-label"
+      td style="padding: 3px"
+        = text_input c, :player, class: "form-control"
+        = error_tag c, :player
 
-  div class="form-group"
-    = label f, :player, class: "control-label"
-    = text_input f, :player, class: "form-control"
-    = error_tag f, :player
+    tr
+      td style="padding: 3px"= label c, :character_level, class: "control-label"
+      td style="padding: 3px"
+        = number_input c, :character_level, class: "form-control"
+        = error_tag c, :character_level
 
-  div class="form-group"
-    = label f, :character_level, class: "control-label"
-    = number_input f, :character_level, class: "form-control"
-    = error_tag f, :character_level
+  table
+    = for {ability, field} <- @stats, (fn f -> !is_nil(f) end).(field) do
 
-  = inputs_for f, :fields, fn field ->
+      tr
+        td style="padding: 3px"
+          strong= "#{ability}" |> String.slice(0..2) |> String.upcase
+        td style="padding: 3px"
+          = hidden_input String.to_atom("character_fields_#{field.id}"), :id,
+            name: "character[fields][#{field.id}][id]",
+            value: field.id
+          = number_input String.to_atom("character_fields_#{field.id}"), :value,
+            name: "character[fields][#{field.id}][value]",
+            class: "form-control",
+            value: field.value
 
-    h3 Field
-    div class="form-group"
-      = label field, :name, class: "control-label"
-      = text_input field, :name, class: "form-control"
-      = error_tag field, :name
-    div class="form-group"
-      = label field, :value, class: "control-label"
-      = number_input field, :value, class: "form-control"
-      = error_tag field, :value
-
-
-    = inputs_for field, :modifiers, fn m ->
-
-      h4 Modifier
-      div class="form-group"
-        = label m, :value, class: "control-label"
-        = number_input m, :value, class: "form-control"
-        = error_tag m, :value
-      div class="form-group"
-        = label m, :description, class: "control-label"
-        = text_input m, :description, class: "form-control"
-        = error_tag m, :description
-      = if m.data.id do
-
-        div style="text-align: right;"
-          = label m, :delete, "Delete?", class: "control-label"
-          '
-          = checkbox m, :delete
-      - else
-
-        div style="text-align: right;"
-          a href="#" class="remove-modifier"
-            | - Remove
-
+  / = inputs_for c, :fields, fn f ->
+  /
+  /   h3 Field
+  /   div class="form-group"
+  /     = label f, :name, class: "control-label"
+  /     = text_input f, :name, class: "form-control"
+  /     = error_tag f, :name
+  /   div class="form-group"
+  /     = label f, :value, class: "control-label"
+  /     = number_input f, :value, class: "form-control"
+  /     = error_tag f, :value
+  /
+  /   = inputs_for f, :modifiers, fn m ->
+  /
+  /     .modifier
+  /       h4 Modifier
+  /       div class="form-group"
+  /         = label m, :value, class: "control-label"
+  /         = number_input m, :value, class: "form-control"
+  /         = error_tag m, :value
+  /       div class="form-group"
+  /         = label m, :description, class: "control-label"
+  /         = text_input m, :description, class: "form-control"
+  /         = error_tag m, :description
+  /       = if m.data.id do
+  /
+  /         div style="vertical-align: bottom; display: inline-block"
+  /           = label m, :delete, "Delete?", class: "control-label"
+  /           '
+  /           = checkbox m, :delete, style: "vertical-align: text-bottom"
+  /       - else
+  /
+  /         div style="text-align: right;"
+  /           a href="#" class="remove-modifier"
+  /             | - Remove
 
   div class="form-group"
     = submit "Submit", class: "btn btn-primary"

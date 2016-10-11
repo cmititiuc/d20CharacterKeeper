@@ -57,13 +57,28 @@ defmodule D20CharacterKeeper.CharacterController do
 
   def edit(conn, %{"id" => id}) do
     character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
+    stats =
+      Character.get_abilities!(id)
+      |> Enum.map(&({String.to_atom(&1.name), &1}))
+    ordered_stats =
+      ~w(strength dexterity constitution intelligence wisdom charisma)a
+      |> Enum.map(&({&1, stats[&1]}))
     changeset = Character.changeset(character)
-    render(conn, "edit.html", character: character, changeset: changeset)
+    params = %{character: character, changeset: changeset, stats: ordered_stats}
+
+    render(conn, "edit.html", params)
   end
 
   def update(conn, %{"id" => id, "character" => character_params}) do
     character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
+    stats =
+      Character.get_abilities!(id)
+      |> Enum.map(&({String.to_atom(&1.name), &1}))
+    ordered_stats =
+      ~w(strength dexterity constitution intelligence wisdom charisma)a
+      |> Enum.map(&({&1, stats[&1]}))
     changeset = Character.changeset(character, character_params)
+    params = %{character: character, changeset: changeset, stats: ordered_stats}
 
     case Repo.update(changeset) do
       {:ok, character} ->
@@ -71,7 +86,7 @@ defmodule D20CharacterKeeper.CharacterController do
         |> put_flash(:info, "Character updated successfully.")
         |> redirect(to: character_path(conn, :show, character))
       {:error, changeset} ->
-        render(conn, "edit.html", character: character, changeset: changeset)
+        render(conn, "edit.html", params)
     end
   end
 
