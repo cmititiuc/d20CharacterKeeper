@@ -19,8 +19,20 @@ defmodule D20CharacterKeeper.CharacterController do
   end
 
   def new(conn, _params) do
-    changeset = Character.changeset(%Character{})
-    render(conn, "new.html", changeset: changeset)
+    changeset = Character.changeset(%Character{fields: [
+      %Field{name: "strength", modifiers: []},
+      %Field{name: "dexterity", modifiers: []},
+      %Field{name: "constitution", modifiers: []},
+      %Field{name: "intelligence", modifiers: []},
+      %Field{name: "wisdom", modifiers: []},
+      %Field{name: "charisma", modifiers: []},
+    ]})
+    stats = changeset.data.fields |> Enum.map(&({String.to_atom(&1.name), &1}))
+    ordered_stats =
+      ~w(strength dexterity constitution intelligence wisdom charisma)a
+      |> Enum.map(&({&1, stats[&1]}))
+      |> Enum.with_index
+    render(conn, "new.html", changeset: changeset, stats: ordered_stats)
   end
 
   def create(conn, %{"character" => character_params}) do
@@ -32,7 +44,7 @@ defmodule D20CharacterKeeper.CharacterController do
         |> put_flash(:info, "Character created successfully.")
         |> redirect(to: character_path(conn, :index))
       {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, stats: []) # TODO: stats
     end
   end
 
@@ -63,6 +75,7 @@ defmodule D20CharacterKeeper.CharacterController do
     ordered_stats =
       ~w(strength dexterity constitution intelligence wisdom charisma)a
       |> Enum.map(&({&1, stats[&1]}))
+      |> Enum.with_index
     changeset = Character.changeset(character)
     params = %{character: character, changeset: changeset, stats: ordered_stats}
 

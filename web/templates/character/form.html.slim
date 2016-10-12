@@ -22,17 +22,21 @@
         = error_tag c, :character_level
 
   table
-    = for {ability, field} <- @stats, (&(&1)).(field) do
+    = for {{ability, field}, index} <- @stats, (&(&1)).(field) do
 
       tr
         td style="padding: 3px"
           strong= "#{ability}" |> String.slice(0..2) |> String.upcase
         td style="padding: 3px"
-          = hidden_input String.to_atom("character_fields_#{field.id}"), :id,
-            name: "character[fields][#{field.id}][id]",
-            value: field.id
-          = number_input String.to_atom("character_fields_#{field.id}"), :value,
-            name: "character[fields][#{field.id}][value]",
+          = if field.id do
+            = hidden_input String.to_atom("character_fields_#{index}"), :id,
+              name: "character[fields][#{index}][id]",
+              value: field.id
+          = hidden_input String.to_atom("character_fields_#{index}"), :name,
+            name: "character[fields][#{index}][name]",
+            value: field.name
+          = number_input String.to_atom("character_fields_#{index}"), :value,
+            name: "character[fields][#{index}][value]",
             class: "form-control",
             value: field.value
         = for modifier <- field.modifiers do
