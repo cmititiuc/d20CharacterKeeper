@@ -28,7 +28,8 @@ defmodule D20CharacterKeeper.Character do
     query =
       from f in Field,
       where: f.character_id == ^id,
-      where: f.name in ^abilities
+      where: f.name in ^abilities,
+      preload: :modifiers
 
     Repo.all(query)
   end

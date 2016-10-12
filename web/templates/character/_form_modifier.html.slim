@@ -1,0 +1,34 @@
+td style="padding: 3px"
+  = hidden_input String.to_atom("character_fields_#{@f.id}_modifiers_#{@m.id}"),
+    :id,
+    name: "character[fields][#{@f.id}][modifiers][#{@m.id}][id]",
+    value: @m.id
+  = number_input String.to_atom("character_fields_#{@f.id}_modifiers_#{@m.id}"),
+    :value,
+    name: "character[fields][#{@f.id}][modifiers][#{@m.id}][value]",
+    class: "form-control",
+    value: @m.value
+td style="padding: 3px"
+  = text_input String.to_atom("character_fields_#{@f.id}_modifiers_#{@m.id}"),
+    :description,
+    name: "character[fields]#{@f.id}][modifiers][#{@m.id}][description]",
+    class: "form-control",
+    value: @m.description
+
+= if @m.id do
+
+  td style="padding: 2px"
+    = label String.to_atom("character_fields_#{@f.id}_modifiers_#{@m.id}"),
+      :delete,
+      "Delete?",
+      class: "control-label"
+    '
+    = checkbox String.to_atom("character_fields_#{@f.id}_modifiers_#{@m.id}"),
+      :delete,
+      name: "character[fields][#{@f.id}][modifiers][#{@m.id}][delete]",
+      style: "vertical-align: text-bottom"
+- else
+
+  td style="padding: 2px"
+    a href="#" class="remove-modifier"
+      | - Remove

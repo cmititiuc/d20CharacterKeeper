@@ -15,7 +15,6 @@
       td style="padding: 3px"
         = text_input c, :player, class: "form-control"
         = error_tag c, :player
-
     tr
       td style="padding: 3px"= label c, :character_level, class: "control-label"
       td style="padding: 3px"
@@ -23,7 +22,7 @@
         = error_tag c, :character_level
 
   table
-    = for {ability, field} <- @stats, (fn f -> !is_nil(f) end).(field) do
+    = for {ability, field} <- @stats, (&(&1)).(field) do
 
       tr
         td style="padding: 3px"
@@ -36,6 +35,9 @@
             name: "character[fields][#{field.id}][value]",
             class: "form-control",
             value: field.value
+        = for modifier <- field.modifiers do
+
+          = render "_form_modifier.html", f: field, m: modifier
 
   / = inputs_for c, :fields, fn f ->
   /
