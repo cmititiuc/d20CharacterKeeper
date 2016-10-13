@@ -72,12 +72,12 @@ defmodule D20CharacterKeeper.CharacterController do
     stats =
       Character.get_abilities!(id)
       |> Enum.map(&({String.to_atom(&1.name), &1}))
-    ordered_stats =
+    stats =
       ~w(strength dexterity constitution intelligence wisdom charisma)a
       |> Enum.map(&({&1, stats[&1]}))
       |> Enum.with_index
     changeset = Character.changeset(character)
-    params = %{character: character, changeset: changeset, stats: ordered_stats}
+    params = %{character: character, changeset: changeset, stats: stats}
 
     render(conn, "edit.html", params)
   end
@@ -87,11 +87,10 @@ defmodule D20CharacterKeeper.CharacterController do
     stats =
       Character.get_abilities!(id)
       |> Enum.map(&({String.to_atom(&1.name), &1}))
-    ordered_stats =
+    stats =
       ~w(strength dexterity constitution intelligence wisdom charisma)a
       |> Enum.map(&({&1, stats[&1]}))
     changeset = Character.changeset(character, character_params)
-    params = %{character: character, changeset: changeset, stats: ordered_stats}
 
     case Repo.update(changeset) do
       {:ok, character} ->
@@ -99,6 +98,7 @@ defmodule D20CharacterKeeper.CharacterController do
         |> put_flash(:info, "Character updated successfully.")
         |> redirect(to: character_path(conn, :show, character))
       {:error, changeset} ->
+        params = %{character: character, changeset: changeset, stats: stats}
         render(conn, "edit.html", params)
     end
   end

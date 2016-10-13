@@ -22,26 +22,31 @@
         = error_tag c, :character_level
 
   table
-    = for {{ability, field}, index} <- @stats, (&(&1)).(field) do
+    = for {{ability, field}, f_index} <- @stats do
 
       tr
-        td style="padding: 3px"
+        td style="padding: 3px; vertical-align: top;"
           strong= "#{ability}" |> String.slice(0..2) |> String.upcase
-        td style="padding: 3px"
-          = if field.id do
-            = hidden_input String.to_atom("character_fields_#{index}"), :id,
-              name: "character[fields][#{index}][id]",
-              value: field.id
-          = hidden_input String.to_atom("character_fields_#{index}"), :name,
-            name: "character[fields][#{index}][name]",
-            value: field.name
-          = number_input String.to_atom("character_fields_#{index}"), :value,
-            name: "character[fields][#{index}][value]",
-            class: "form-control",
-            value: field.value
-        = for modifier <- field.modifiers do
+        = if field do
 
-          = render "_form_modifier.html", f: field, m: modifier
+          td style="padding: 3px; vertical-align: top;"
+            = if field.id do
+              = hidden_input String.to_atom("character_fields_#{f_index}"), :id,
+                name: "character[fields][#{f_index}][id]",
+                value: field.id
+            = hidden_input String.to_atom("character_fields_#{f_index}"), :name,
+              name: "character[fields][#{f_index}][name]",
+              value: field.name
+            = number_input String.to_atom("character_fields_#{f_index}"), :value,
+              name: "character[fields][#{f_index}][value]",
+              class: "form-control",
+              value: field.value
+          td
+            table style="margin: 0;"
+              = for {modifier, m_index} <- field.modifiers |> Enum.with_index do
+
+                = render "_form_modifier.html",
+                  f_index: f_index, m_index: m_index, m: modifier
 
   / = inputs_for c, :fields, fn f ->
   /

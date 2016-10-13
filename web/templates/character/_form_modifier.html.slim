@@ -1,34 +1,32 @@
-td style="padding: 3px"
-  = hidden_input String.to_atom("character_fields_#{@f.id}_modifiers_#{@m.id}"),
-    :id,
-    name: "character[fields][#{@f.id}][modifiers][#{@m.id}][id]",
-    value: @m.id
-  = number_input String.to_atom("character_fields_#{@f.id}_modifiers_#{@m.id}"),
-    :value,
-    name: "character[fields][#{@f.id}][modifiers][#{@m.id}][value]",
-    class: "form-control",
-    value: @m.value
-td style="padding: 3px"
-  = text_input String.to_atom("character_fields_#{@f.id}_modifiers_#{@m.id}"),
-    :description,
-    name: "character[fields]#{@f.id}][modifiers][#{@m.id}][description]",
-    class: "form-control",
-    value: @m.description
+tr
+  td style="padding: 3px"
+    = hidden_input CharacterHelpers.modifier_form_name(@f_index, @m_index),
+      :id,
+      name: "character[fields][#{@f_index}][modifiers][#{@m_index}][id]",
+      value: @m.id
+    = number_input CharacterHelpers.modifier_form_name(@f_index, @m_index),
+      :value,
+      name: "character[fields][#{@f_index}][modifiers][#{@m_index}][value]",
+      class: "form-control",
+      value: @m.value
+  td style="padding: 3px"
+    = text_input CharacterHelpers.modifier_form_name(@f_index, @m_index),
+      :description,
+      name: "character[fields]#{@f_index}][modifiers][#{@m_index}][description]",
+      class: "form-control",
+      value: @m.description
+  td style="padding: 3px"
+    = if @m.id do
+      = label CharacterHelpers.modifier_form_name(@f_index, @m_index),
+        :delete,
+        "Delete?",
+        class: "control-label"
+      '
+      = checkbox CharacterHelpers.modifier_form_name(@f_index, @m_index),
+        :delete,
+        name: "character[fields][#{@f_index}][modifiers][#{@m_index}][delete]",
+        style: "vertical-align: text-bottom"
+    - else
 
-= if @m.id do
-
-  td style="padding: 2px"
-    = label String.to_atom("character_fields_#{@f.id}_modifiers_#{@m.id}"),
-      :delete,
-      "Delete?",
-      class: "control-label"
-    '
-    = checkbox String.to_atom("character_fields_#{@f.id}_modifiers_#{@m.id}"),
-      :delete,
-      name: "character[fields][#{@f.id}][modifiers][#{@m.id}][delete]",
-      style: "vertical-align: text-bottom"
-- else
-
-  td style="padding: 2px"
-    a href="#" class="remove-modifier"
-      | - Remove
+      a href="#" class="remove-modifier"
+        | - Remove
