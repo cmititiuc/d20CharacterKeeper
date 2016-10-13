@@ -19,4 +19,5 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 // import socket from "./socket"
-import fields from "./fields"
+// import fields from "./fields"
+import characters from "./characters"

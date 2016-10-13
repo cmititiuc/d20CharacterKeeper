@@ -45,14 +45,21 @@
             value: if field, do: field.value
         = if field && List.first(field.modifiers) do
 
-          td
-            table style="margin: 0;"
-              = for {modifier, m_index} <- field.modifiers |> Enum.with_index do
-
+          = for {modifier, m_index} <- field.modifiers |> Enum.with_index do
+            = if modifier == List.first(field.modifiers) do
+              = render "_form_modifier.html",
+                f_index: f_index, m_index: m_index, m: modifier
+              td style="vertical-align: top; padding-top: 6px; font-size: larger"
+                a class="add-modifier" +
+            - else
+              tr
+                td
+                td
                 = render "_form_modifier.html",
                   f_index: f_index, m_index: m_index, m: modifier
-        td style="vertical-align: top; padding-top: 6px; font-size: larger"
-          span class="add-modifier" +
+        - else
+          td style="vertical-align: top; padding-top: 6px; font-size: larger"
+            a class="add-modifier" +
 
   / = inputs_for c, :fields, fn f ->
   /
