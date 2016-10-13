@@ -52,6 +52,7 @@ defmodule D20CharacterKeeper.Web do
       import D20CharacterKeeper.Router.Helpers
       import D20CharacterKeeper.ErrorHelpers
       import D20CharacterKeeper.Gettext
+      alias D20CharacterKeeper.CharacterHelpers
     end
   end
 
