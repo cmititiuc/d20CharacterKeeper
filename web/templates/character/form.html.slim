@@ -27,20 +27,20 @@
       tr
         td style="padding: 3px; vertical-align: top;"
           strong= "#{ability}" |> String.slice(0..2) |> String.upcase
+        td style="padding: 3px; vertical-align: top;"
+          = if field && field.id do
+            = hidden_input String.to_atom("character_fields_#{f_index}"), :id,
+              name: "character[fields][#{f_index}][id]",
+              value: field.id
+          = hidden_input String.to_atom("character_fields_#{f_index}"), :name,
+            name: "character[fields][#{f_index}][name]",
+            value: ability
+          = number_input String.to_atom("character_fields_#{f_index}"), :value,
+            name: "character[fields][#{f_index}][value]",
+            class: "form-control",
+            value: if field, do: field.value
         = if field do
 
-          td style="padding: 3px; vertical-align: top;"
-            = if field.id do
-              = hidden_input String.to_atom("character_fields_#{f_index}"), :id,
-                name: "character[fields][#{f_index}][id]",
-                value: field.id
-            = hidden_input String.to_atom("character_fields_#{f_index}"), :name,
-              name: "character[fields][#{f_index}][name]",
-              value: field.name
-            = number_input String.to_atom("character_fields_#{f_index}"), :value,
-              name: "character[fields][#{f_index}][value]",
-              class: "form-control",
-              value: field.value
           td
             table style="margin: 0;"
               = for {modifier, m_index} <- field.modifiers |> Enum.with_index do
