@@ -69,9 +69,7 @@ defmodule D20CharacterKeeper.CharacterController do
 
   def edit(conn, %{"id" => id}) do
     character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
-    stats =
-      Character.get_abilities!(id)
-      |> Enum.map(&({String.to_atom(&1.name), &1}))
+    stats = character.fields |> Enum.map(&({String.to_atom(&1.name), &1}))
     stats =
       ~w(strength dexterity constitution intelligence wisdom charisma)a
       |> Enum.map(&({&1, stats[&1]}))
@@ -84,9 +82,7 @@ defmodule D20CharacterKeeper.CharacterController do
 
   def update(conn, %{"id" => id, "character" => character_params}) do
     character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
-    stats =
-      Character.get_abilities!(id)
-      |> Enum.map(&({String.to_atom(&1.name), &1}))
+    stats = character.fields |> Enum.map(&({String.to_atom(&1.name), &1}))
     stats =
       ~w(strength dexterity constitution intelligence wisdom charisma)a
       |> Enum.map(&({&1, stats[&1]}))

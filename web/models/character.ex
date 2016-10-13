@@ -14,25 +14,6 @@ defmodule D20CharacterKeeper.Character do
     timestamps()
   end
 
-  def get_field!(id, field_name) do
-    query =
-      from f in Field,
-      where: f.character_id == ^id and f.name == ^field_name
-
-    Repo.one(query)
-  end
-
-  def get_abilities!(id) do
-    abilities = ~w(strength dexterity constitution intelligence wisdom charisma)
-    query =
-      from f in Field,
-      where: f.character_id == ^id,
-      where: f.name in ^abilities,
-      preload: :modifiers
-
-    Repo.all(query)
-  end
-
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """

@@ -22,10 +22,14 @@
         = error_tag c, :character_level
 
   table
+    thead
+      th style="text-align: center" Ability
+      th style="text-align: center" Score
+      th Modifiers
     = for {{ability, field}, f_index} <- @stats do
 
       tr
-        td style="padding: 3px; vertical-align: top;"
+        td style="padding: 3px; vertical-align: top; padding-top: 10px;"
           strong= "#{ability}" |> String.slice(0..2) |> String.upcase
         td style="padding: 3px; vertical-align: top;"
           = if field && field.id do
@@ -39,7 +43,7 @@
             name: "character[fields][#{f_index}][value]",
             class: "form-control",
             value: if field, do: field.value
-        = if field do
+        = if field && List.first(field.modifiers) do
 
           td
             table style="margin: 0;"
@@ -47,6 +51,8 @@
 
                 = render "_form_modifier.html",
                   f_index: f_index, m_index: m_index, m: modifier
+        td style="vertical-align: top; padding-top: 6px; font-size: larger"
+          span class="add-modifier" +
 
   / = inputs_for c, :fields, fn f ->
   /
