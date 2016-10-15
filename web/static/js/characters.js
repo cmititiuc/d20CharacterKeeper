@@ -1,14 +1,17 @@
 import $ from "jquery"
 
+function ability_names() {
+  return(
+    ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']
+  )
+}
+
 function ability_name_fields() {
-  return [
-    'input[value=strength]',
-    'input[value=dexterity]',
-    'input[value=constitution]',
-    'input[value=intelligence]',
-    'input[value=wisdom]',
-    'input[value=charisma]',
-  ]
+  return (
+    ability_names().map(function(ability_name, _) {
+      return 'input[value=' + ability_name + ']'
+    })
+  )
 }
 
 function modifier_cells() {
@@ -26,6 +29,31 @@ function new_row(cells) {
   return ('<tr><td></td><td></td>' + cells() + '</tr>')
 }
 
+function form_attr_id(i, mod_i, attr) {
+  return ('character_fields_' + i + '_modifiers_' + mod_i + '_' + attr)
+}
+
+function form_attr_name(i, mod_i, attr) {
+  return ('character[fields][' + i + '][modifiers][' + mod_i + '][' + attr + ']')
+}
+
+// do any of the cells in the row have an ability score field?
+function row_contains_ability_score(row) {
+  return row.children('td').children(ability_name_fields().join(', ')).length
+}
+
+function set_mod_attrs(field, index, mod_index) {
+  if (field.type == 'number') {
+    $(field)
+      .attr('id', form_attr_id(index, mod_index, 'value'))
+      .attr('name', form_attr_name(index, mod_index, 'value'))
+  } else if (field.type == 'text') {
+    $(field)
+      .attr('id', form_attr_id(index, mod_index, 'description'))
+      .attr('name', form_attr_name(index, mod_index, 'description'))
+  }
+}
+
 function find_last_modifier_row_for(row) {
   // find the row before the next row that contains an ability score
   // (demarcated by the "+" action link) or the last row if there are none
@@ -35,43 +63,21 @@ function find_last_modifier_row_for(row) {
   return (row)
 }
 
-// TODO: REFACTOR
 function renumber_modifiers() {
   var ability_field_cells = $('table').eq(1).find('tbody tr > td:nth-child(2)')
   var ability_scores_fields = ability_field_cells.children('.form-control')
+  // every cell in the row starting from the 3rd
+  var mod_cells = '> td:nth-child(1n+3)'
 
   ability_scores_fields.each(function(index, field) {
-    var first_modifier_value_field =
-      $(this).parents('tr').find('> td:nth-child(3)').children('input[type=number]')
-    var first_modifier_description_field =
-      $(this).parents('tr').find('> td:nth-child(4)').children('input[type=text]')
-
-    if (first_modifier_value_field.length) {
-      first_modifier_value_field
-        .attr('id', 'character_fields_' + index + '_modifiers_0_value')
-        .attr('name', 'character[fields][' + index + '][modifiers][0][value]')
-      first_modifier_description_field
-        .attr('id', 'character_fields_' + index + '_modifiers_0_description')
-        .attr('name', 'character[fields][' + index + '][modifiers][0][description]')
-    }
     var row = $(this).parents('tr')
-    var row_contains_ability_score = function(row) {
-      return row.children('td').children(ability_name_fields().join(', ')).length
-    }
+    var mod_index = 0;
 
-    var mod_index = 1;
-    while (row.next().length && !row_contains_ability_score(row.next())) {
+    while ($(row).length && (mod_index == 0 || !row_contains_ability_score(row))) {
+      row.find(mod_cells).children('input').each(function(_, field) {
+        set_mod_attrs(field, index, mod_index)
+      })
       row = row.next()
-      row.children('td').children('input[type=number]').each(function(j, field) {
-        $(field)
-          .attr('id', 'character_fields_' + index + '_modifiers_' + mod_index + '_value')
-          .attr('name', 'character[fields][' + index + '][modifiers][' + mod_index + '][value]')
-      })
-      row.children('td').children('input[type=text]').each(function(j, field) {
-        $(field)
-          .attr('id', 'character_fields_' + index + '_modifiers_' + mod_index + '_description')
-          .attr('name', 'character[fields][' + index + '][modifiers][' + mod_index + '][description]')
-      })
       mod_index++;
     }
   })
@@ -79,19 +85,17 @@ function renumber_modifiers() {
 
 function remove_modifier(e) {
   e.preventDefault()
-  // do any of the cells in this row have an ability score field?
-  var row_contains_ability_score =
-    $(this).parent().siblings().children(ability_name_fields().join(', ')).length
+  var parent_row = $(this).parents('tr')
 
-  if (row_contains_ability_score) {
+  if (row_contains_ability_score(parent_row)) {
     // only delete the cells that contain the modifier fields
-    var parent = $(this).parent()
-    parent.prev().remove()
-    parent.prev().remove()
-    parent.remove()
+    var parent_cell = $(this).parent()
+    parent_cell.prev().remove()
+    parent_cell.prev().remove()
+    parent_cell.remove()
   } else {
     // delete the whole row
-    $(this).parents('tr').remove()
+    parent_row.remove()
   }
 
   renumber_modifiers()
@@ -115,7 +119,7 @@ function add_modifier(e) {
 
 function run() {
   $(document).on('click', '.remove-modifier', remove_modifier)
-  $(document).ready(function() { $('.add-modifier').on('click', add_modifier) })
+  $(document).ready(function() { $('.add-modifier').on('click', add_modifier); renumber_modifiers(); })
 }
 
 export var Characters = { run: run }
