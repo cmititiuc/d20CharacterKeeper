@@ -53,10 +53,6 @@ function renumber_modifiers() {
       first_modifier_description_field
         .attr('id', 'character_fields_' + index + '_modifiers_0_description')
         .attr('name', 'character[fields][' + index + '][modifiers][0][description]')
-
-      console.log([index, field.name], [0, first_modifier_value_field[0].name])
-    } else {
-      console.log([index, field.name])
     }
     var row = $(this).parents('tr')
     var row_contains_ability_score = function(row) {
@@ -70,18 +66,15 @@ function renumber_modifiers() {
         $(field)
           .attr('id', 'character_fields_' + index + '_modifiers_' + mod_index + '_value')
           .attr('name', 'character[fields][' + index + '][modifiers][' + mod_index + '][value]')
-        console.log(' ', [index + 1, field.name])
       })
       row.children('td').children('input[type=text]').each(function(j, field) {
         $(field)
           .attr('id', 'character_fields_' + index + '_modifiers_' + mod_index + '_description')
           .attr('name', 'character[fields][' + index + '][modifiers][' + mod_index + '][description]')
-        console.log(' ', [index + 1, field.name])
       })
       mod_index++;
     }
   })
-  console.log("\n\n\n")
 }
 
 function remove_modifier(e) {
