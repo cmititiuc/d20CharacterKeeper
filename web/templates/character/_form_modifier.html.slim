@@ -1,4 +1,4 @@
-td style="padding: 3px"
+td
   = hidden_input CharacterHelpers.modifier_form_name(@f_index, @m_index),
     :id,
     name: "character[fields][#{@f_index}][modifiers][#{@m_index}][id]",
@@ -8,13 +8,13 @@ td style="padding: 3px"
     name: "character[fields][#{@f_index}][modifiers][#{@m_index}][value]",
     class: "form-control",
     value: @m.value
-td style="padding: 3px"
+td
   = text_input CharacterHelpers.modifier_form_name(@f_index, @m_index),
     :description,
     name: "character[fields][#{@f_index}][modifiers][#{@m_index}][description]",
     class: "form-control",
     value: @m.description
-td style="padding: 3px"
+td
   = if @m.id do
     = label CharacterHelpers.modifier_form_name(@f_index, @m_index),
       :delete,

@@ -15,9 +15,9 @@ function ability_name_fields() {
 
 function modifier_cells() {
   return (
-    '<td><input class="form-control" id="" name="" type="number"></td>' +
-    '<td><input class="form-control" id="" name="" type="text"></td>' +
-    '<td style="vertical-align: top; padding-top: 6px; font-size: larger">' +
+    '<td><input class="form-control" type="number"></td>' +
+    '<td><input class="form-control" type="text"></td>' +
+    '<td class="remove-modifier-container">' +
     '<a href="#" class="remove-modifier">−</a></td>'
   )
 }
@@ -68,16 +68,16 @@ function renumber_modifiers() {
   // every cell in the row starting from the 3rd
   var mod_cells = '> td:nth-child(1n+3)'
 
-  ability_scores_fields.each(function(index, field) {
+  ability_scores_fields.each(function(abil_index, field) {
     var row = $(this).parents('tr')
-    var mod_index = 0;
+    var mod_index = 0
 
     while ($(row).length && (mod_index == 0 || !row_contains_ability_score(row))) {
       row.find(mod_cells).children('input').each(function(_, field) {
-        set_mod_attrs(field, index, mod_index)
+        set_mod_attrs(field, abil_index, mod_index)
       })
       row = row.next()
-      mod_index++;
+      mod_index++
     }
   })
 }
@@ -118,7 +118,7 @@ function add_modifier(e) {
 
 function run() {
   $(document).on('click', '.remove-modifier', remove_modifier)
-  $(document).ready(function() { $('.add-modifier').on('click', add_modifier); renumber_modifiers(); })
+  $(document).ready(function() { $('.add-modifier').on('click', add_modifier) })
 }
 
 export var Characters = { run: run }
