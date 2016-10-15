@@ -35,19 +35,53 @@ function find_last_modifier_row_for(row) {
   return (row)
 }
 
+// TODO: REFACTOR
 function renumber_modifiers() {
-  $('#modifiers .form-group:even').each(function(i) {
-    $(this).children('label').attr('for', 'field_modifiers_' + i + '_value')
-    $(this).children('input')
-      .attr('id', 'field_modifiers_' + i + '_value')
-      .attr('name', 'field[modifiers][' + i + '][value]')
+  var ability_field_cells = $('table').eq(1).find('tbody tr > td:nth-child(2)')
+  var ability_scores_fields = ability_field_cells.children('.form-control')
+
+  ability_scores_fields.each(function(index, field) {
+    var first_modifier_value_field =
+      $(this).parents('tr').find('> td:nth-child(3)').children('input[type=number]')
+    var first_modifier_description_field =
+      $(this).parents('tr').find('> td:nth-child(4)').children('input[type=text]')
+
+    if (first_modifier_value_field.length) {
+      first_modifier_value_field
+        .attr('id', 'character_fields_' + index + '_modifiers_0_value')
+        .attr('name', 'character[fields][' + index + '][modifiers][0][value]')
+      first_modifier_description_field
+        .attr('id', 'character_fields_' + index + '_modifiers_0_description')
+        .attr('name', 'character[fields][' + index + '][modifiers][0][description]')
+
+      console.log([index, field.name], [0, first_modifier_value_field[0].name])
+    } else {
+      console.log([index, field.name])
+    }
+    var row = $(this).parents('tr')
+    var row_contains_ability_score = function(row) {
+      return row.children('td').children(ability_name_fields().join(', ')).length
+    }
+
+    var mod_index = 1;
+    while (row.next().length && !row_contains_ability_score(row.next())) {
+      row = row.next()
+      row.children('td').children('input[type=number]').each(function(j, field) {
+        $(field)
+          .attr('id', 'character_fields_' + index + '_modifiers_' + mod_index + '_value')
+          .attr('name', 'character[fields][' + index + '][modifiers][' + mod_index + '][value]')
+        console.log(' ', [index + 1, field.name])
+      })
+      row.children('td').children('input[type=text]').each(function(j, field) {
+        $(field)
+          .attr('id', 'character_fields_' + index + '_modifiers_' + mod_index + '_description')
+          .attr('name', 'character[fields][' + index + '][modifiers][' + mod_index + '][description]')
+        console.log(' ', [index + 1, field.name])
+      })
+      mod_index++;
+    }
   })
-  $('#modifiers .form-group:odd').each(function(i) {
-    $(this).children('label').attr('for', 'field_modifiers_' + i + '_description')
-    $(this).children('input')
-      .attr('id', 'field_modifiers_' + i + '_description')
-      .attr('name', 'field[modifiers][' + i + '][description]')
-  })
+  console.log("\n\n\n")
 }
 
 function remove_modifier(e) {
@@ -67,7 +101,7 @@ function remove_modifier(e) {
     $(this).parents('tr').remove()
   }
 
-  // renumber_modifiers()
+  renumber_modifiers()
 }
 
 function add_modifier(e) {
@@ -83,7 +117,7 @@ function add_modifier(e) {
     find_last_modifier_row_for(parent_row).after(new_row(modifier_cells))
   }
 
-  // renumber_modifiers()
+  renumber_modifiers()
 }
 
 function run() {
