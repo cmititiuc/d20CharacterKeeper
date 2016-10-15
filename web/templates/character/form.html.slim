@@ -6,18 +6,18 @@
 
   table
     tr
-      td style="padding: 3px"= label c, :name, class: "control-label"
-      td style="padding: 3px"
+      td= label c, :name, class: "control-label"
+      td
         = text_input c, :name, class: "form-control"
         = error_tag c, :name
     tr
-      td style="padding: 3px"= label c, :player, class: "control-label"
-      td style="padding: 3px"
+      td= label c, :player, class: "control-label"
+      td
         = text_input c, :player, class: "form-control"
         = error_tag c, :player
     tr
-      td style="padding: 3px"= label c, :character_level, class: "control-label"
-      td style="padding: 3px"
+      td= label c, :character_level, class: "control-label"
+      td
         = number_input c, :character_level, class: "form-control"
         = error_tag c, :character_level
 
@@ -29,9 +29,9 @@
     = for {{ability, field}, f_index} <- @stats do
 
       tr
-        td style="padding: 3px; vertical-align: top; padding-top: 10px;"
+        td style="vertical-align: top; padding-top: 10px;"
           strong= "#{ability}" |> String.slice(0..2) |> String.upcase
-        td style="padding: 3px; vertical-align: top;"
+        td style="vertical-align: top;"
           = if field && field.id do
             = hidden_input String.to_atom("character_fields_#{f_index}"), :id,
               name: "character[fields][#{f_index}][id]",

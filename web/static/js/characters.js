@@ -8,18 +8,15 @@ function ability_names() {
 
 function ability_name_fields() {
   return (
-    ability_names().map(function(ability_name, _) {
-      return 'input[value=' + ability_name + ']'
-    })
+    ability_names()
+      .map(function(name, _) { return ('input[value=' + name + ']') })
   )
 }
 
 function modifier_cells() {
   return (
-    '<td style="padding: 3px;">' +
-    '<input class="form-control" id="" name="" type="number"></td>' +
-    '<td style="padding: 3px;">' +
-    '<input class="form-control" id="" name="" type="text"></td>' +
+    '<td><input class="form-control" id="" name="" type="number"></td>' +
+    '<td><input class="form-control" id="" name="" type="text"></td>' +
     '<td style="vertical-align: top; padding-top: 6px; font-size: larger">' +
     '<a href="#" class="remove-modifier">−</a></td>'
   )
@@ -42,15 +39,17 @@ function row_contains_ability_score(row) {
   return row.children('td').children(ability_name_fields().join(', ')).length
 }
 
+function set_id_and_name_attrs(field, index, mod_index, attr) {
+  $(field)
+    .attr('id', form_attr_id(index, mod_index, attr))
+    .attr('name', form_attr_name(index, mod_index, attr))
+}
+
 function set_mod_attrs(field, index, mod_index) {
   if (field.type == 'number') {
-    $(field)
-      .attr('id', form_attr_id(index, mod_index, 'value'))
-      .attr('name', form_attr_name(index, mod_index, 'value'))
+    set_id_and_name_attrs(field, index, mod_index, 'value')
   } else if (field.type == 'text') {
-    $(field)
-      .attr('id', form_attr_id(index, mod_index, 'description'))
-      .attr('name', form_attr_name(index, mod_index, 'description'))
+    set_id_and_name_attrs(field, index, mod_index, 'description')
   }
 }
 
