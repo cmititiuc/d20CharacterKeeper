@@ -19,12 +19,18 @@ defmodule D20CharacterKeeper.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [ mod: {D20CharacterKeeper, []},
-      applications: [
-        :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-        :phoenix_ecto, :postgrex
-      ]
+      applications: app_list(Mix.env)
     ]
   end
+
+  def app_list do
+    [ :phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger,
+      :gettext, :phoenix_ecto, :postgrex
+    ]
+  end
+
+  def app_list(:test), do: [:hound | app_list]
+  def app_list(_),     do: app_list
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "web", "test/support"]
@@ -43,7 +49,10 @@ defmodule D20CharacterKeeper.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:phoenix_slime, "~> 0.8.0"},
-      {:apex, "~>0.5.2"},
+      # for pretty-print
+      {:apex, "~>0.5.2", only: [:dev, :test]},
+      # for browser tests
+      {:hound, "~> 1.0", only: :test}
     ]
   end
 

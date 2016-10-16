@@ -17,6 +17,7 @@
     "javascript-brunch": "~2.0.0",
     "sass-brunch": "^2.7.0",
     "uglify-js-brunch": "~2.0.1",
-    "jquery": "~3.1.1"
+    "jquery": "~3.1.1",
+    "phantomjs-prebuilt": "~2.1.13"
   }
 }
