@@ -23,7 +23,7 @@ function modifier_cells() {
 }
 
 function new_row(cells) {
-  return ('<tr><td></td><td></td>' + cells() + '</tr>')
+  return ('<tr><td></td><td></td>' + cells() + '<td></td></tr>')
 }
 
 function form_attr_id(i, mod_i, attr) {
