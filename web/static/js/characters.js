@@ -63,10 +63,11 @@ function find_last_modifier_row_for(row) {
 }
 
 function renumber_modifiers() {
-  var second_column_cells = $('table').eq(1).find('tbody tr > td:nth-child(2)')
-  var ability_scores_fields =
+  var second_column_cells =
+    $('table#ability-scores-form').find('tbody tr > td:nth-child(2)')
+  var ability_score_fields =
     second_column_cells.children(ability_name_fields().join(', '))
-  var ability_score_rows = ability_scores_fields.parent().parent()
+  var ability_score_rows = ability_score_fields.parent().parent()
   // every cell in the row starting from the 3rd
   var mod_cells_selector = '> td:nth-child(1n+3)'
 
