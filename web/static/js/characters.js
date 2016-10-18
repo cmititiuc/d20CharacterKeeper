@@ -36,7 +36,7 @@ function form_attr_name(i, mod_i, attr) {
 
 // do any of the cells in the row have an ability score field?
 function row_contains_ability_score(row) {
-  return row.children('td').children(ability_name_fields().join(', ')).length
+  return $(row).children('td').children(ability_name_fields().join(', ')).length
 }
 
 function set_id_and_name_attrs(field, index, mod_index, attr) {
@@ -63,20 +63,20 @@ function find_last_modifier_row_for(row) {
 }
 
 function renumber_modifiers() {
-  var ability_field_cells = $('table').eq(1).find('tbody tr > td:nth-child(2)')
-  var ability_scores_fields = ability_field_cells.children('.form-control')
+  var second_column_cells = $('table').eq(1).find('tbody tr > td:nth-child(2)')
+  var ability_scores_fields =
+    second_column_cells.children(ability_name_fields().join(', '))
+  var ability_score_rows = ability_scores_fields.parent().parent()
   // every cell in the row starting from the 3rd
-  var mod_cells = '> td:nth-child(1n+3)'
+  var mod_cells_selector = '> td:nth-child(1n+3)'
 
-  ability_scores_fields.each(function(abil_index, field) {
-    var row = $(this).parents('tr')
+  ability_score_rows.each(function(abil_index, row) {
     var mod_index = 0
-
     while ($(row).length && (mod_index == 0 || !row_contains_ability_score(row))) {
-      row.find(mod_cells).children('input').each(function(_, field) {
+      $(row).find(mod_cells_selector).children('input').each(function(_, field) {
         set_mod_attrs(field, abil_index, mod_index)
       })
-      row = row.next()
+      row = $(row).nextAll('tr').first()
       mod_index++
     }
   })

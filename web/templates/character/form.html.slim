@@ -27,40 +27,82 @@
       th style="text-align: center" Score
       th Modifiers
     tbody
-      = for {{ability, field}, f_index} <- @stats do
+      = inputs_for c, :fields, fn f ->
 
         tr
           td style="vertical-align: top; padding-top: 10px;"
-            strong= "#{ability}" |> String.slice(0..2) |> String.upcase
+            strong= CharacterHelpers.field_name(f)
           td style="vertical-align: top;"
-            = if field && field.id do
-              = hidden_input String.to_atom("character_fields_#{f_index}"), :id,
-                name: "character[fields][#{f_index}][id]",
-                value: field.id
-            = hidden_input String.to_atom("character_fields_#{f_index}"), :name,
-              name: "character[fields][#{f_index}][name]",
-              value: ability
-            = number_input String.to_atom("character_fields_#{f_index}"), :value,
-              name: "character[fields][#{f_index}][value]",
-              class: "form-control",
-              value: if field, do: field.value
-          = if field && List.first(field.modifiers) do
+            = hidden_input f, :name, class: "form-control"
+            = number_input f, :value, class: "form-control"
+            = error_tag f, :value
+          = if is_list(f.data.modifiers) && length(f.data.modifiers) == 0 do
 
-            = for {modifier, m_index} <- field.modifiers |> Enum.with_index do
-              = if modifier == List.first(field.modifiers) do
-                = render "_form_modifier.html",
-                  f_index: f_index, m_index: m_index, m: modifier
-                td style="vertical-align: top; padding-top: 6px; font-size: larger"
-                  a class="add-modifier" +
-              - else
-                tr
-                  td
-                  td
-                  = render "_form_modifier.html",
-                    f_index: f_index, m_index: m_index, m: modifier
-          - else
             td style="vertical-align: top; padding-top: 6px; font-size: larger"
               a class="add-modifier" +
+
+          = inputs_for f, :modifiers, fn m ->
+
+            = if is_list(f.data.modifiers) && m.data == hd(f.data.modifiers) do
+
+              td
+                = number_input m, :value, class: "form-control"
+                = error_tag m, :value
+              td
+                = text_input m, :description, class: "form-control"
+                = error_tag m, :description
+              td
+                = label m, :delete, "Delete?", class: "control-label"
+                '
+                = checkbox m, :delete, style: "vertical-align: text-bottom"
+              td style="vertical-align: top; padding-top: 6px; font-size: larger"
+                a class="add-modifier" +
+            - else
+              tr
+                td
+                td
+                td
+                  = number_input m, :value, class: "form-control"
+                  = error_tag m, :value
+                td
+                  = text_input m, :description, class: "form-control"
+                  = error_tag m, :description
+                td
+                  = label m, :delete, "Delete?", class: "control-label"
+                  '
+                  = checkbox m, :delete, style: "vertical-align: text-bottom"
+                td style="vertical-align: top; padding-top: 6px; font-size: larger"
+                  a class="add-modifier" +
+
+  /     = for {{ability, field}, f_index} <- @stats do
+  /           = if field && field.id do
+  /             = hidden_input String.to_atom("character_fields_#{f_index}"), :id,
+  /               name: "character[fields][#{f_index}][id]",
+  /               value: field.id
+  /           = hidden_input String.to_atom("character_fields_#{f_index}"), :name,
+  /             name: "character[fields][#{f_index}][name]",
+  /             value: ability
+  /           = number_input String.to_atom("character_fields_#{f_index}"), :value,
+  /             name: "character[fields][#{f_index}][value]",
+  /             class: "form-control",
+  /             value: if field, do: field.value
+  /         = if field && List.first(field.modifiers) do
+  /
+  /           = for {modifier, m_index} <- field.modifiers |> Enum.with_index do
+  /             = if modifier == List.first(field.modifiers) do
+  /               = render "_form_modifier.html",
+  /                 f_index: f_index, m_index: m_index, m: modifier
+  /               td style="vertical-align: top; padding-top: 6px; font-size: larger"
+  /                 a class="add-modifier" +
+  /             - else
+  /               tr
+  /                 td
+  /                 td
+  /                 = render "_form_modifier.html",
+  /                   f_index: f_index, m_index: m_index, m: modifier
+  /         - else
+  /           td style="vertical-align: top; padding-top: 6px; font-size: larger"
+  /             a class="add-modifier" +
 
   / = inputs_for c, :fields, fn f ->
   /

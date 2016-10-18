@@ -19,20 +19,13 @@ defmodule D20CharacterKeeper.CharacterController do
   end
 
   def new(conn, _params) do
-    changeset = Character.changeset(%Character{fields: [
-      %Field{name: "strength", modifiers: []},
-      %Field{name: "dexterity", modifiers: []},
-      %Field{name: "constitution", modifiers: []},
-      %Field{name: "intelligence", modifiers: []},
-      %Field{name: "wisdom", modifiers: []},
-      %Field{name: "charisma", modifiers: []},
-    ]})
+    changeset = Character.changeset(character_changeset)
     stats = changeset.data.fields |> Enum.map(&({String.to_atom(&1.name), &1}))
-    ordered_stats =
+    stats =
       ~w(strength dexterity constitution intelligence wisdom charisma)a
       |> Enum.map(&({&1, stats[&1]}))
       |> Enum.with_index
-    render(conn, "new.html", changeset: changeset, stats: ordered_stats)
+    render(conn, "new.html", changeset: changeset, stats: stats)
   end
 
   def create(conn, %{"character" => character_params}) do
@@ -44,7 +37,7 @@ defmodule D20CharacterKeeper.CharacterController do
         |> put_flash(:info, "Character created successfully.")
         |> redirect(to: character_path(conn, :index))
       {:error, changeset} ->
-        render(conn, "new.html", changeset: changeset, stats: []) # TODO: stats
+        render(conn, "new.html", changeset: changeset)
     end
   end
 
@@ -109,5 +102,16 @@ defmodule D20CharacterKeeper.CharacterController do
     conn
     |> put_flash(:info, "Character deleted successfully.")
     |> redirect(to: character_path(conn, :index))
+  end
+
+  defp character_changeset() do
+    %Character{fields: [
+      %Field{name: "strength", modifiers: []},
+      %Field{name: "dexterity", modifiers: []},
+      %Field{name: "constitution", modifiers: []},
+      %Field{name: "intelligence", modifiers: []},
+      %Field{name: "wisdom", modifiers: []},
+      %Field{name: "charisma", modifiers: []},
+    ]}
   end
 end
