@@ -36,14 +36,14 @@
             = hidden_input f, :name, class: "form-control"
             = number_input f, :value, class: "form-control"
             = error_tag f, :value
-          = if is_list(f.data.modifiers) && length(f.data.modifiers) == 0 do
+
+          = unless (f.data.modifiers |> is_list && length(f.data.modifiers) != 0) || (f.source.changes[:modifiers] |> is_list) do
 
             td style="vertical-align: top; padding-top: 6px; font-size: larger"
               a class="add-modifier" +
 
           = inputs_for f, :modifiers, fn m ->
-
-            = if is_list(f.data.modifiers) && m.data == hd(f.data.modifiers) do
+            = if m.index == 0 do
 
               td
                 = number_input m, :value, class: "form-control"
@@ -51,12 +51,21 @@
               td
                 = text_input m, :description, class: "form-control"
                 = error_tag m, :description
-              td
-                = label m, :delete, "Delete?", class: "control-label"
-                '
-                = checkbox m, :delete, style: "vertical-align: text-bottom"
-              td style="vertical-align: top; padding-top: 6px; font-size: larger"
-                a class="add-modifier" +
+              = if m.data.id do
+
+                td
+                  = label m, :delete, "Delete?", class: "control-label"
+                  '
+                  = checkbox m, :delete, style: "vertical-align: text-bottom"
+                td style="vertical-align: top; padding-top: 6px; font-size: larger"
+                  a class="add-modifier" +
+              - else
+
+                td class="remove-modifier-container"
+                  a href="#" class="remove-modifier" −
+                td style="vertical-align: top; padding-top: 6px; font-size: larger"
+                  a class="add-modifier" +
+
             - else
               tr
                 td
@@ -67,12 +76,20 @@
                 td
                   = text_input m, :description, class: "form-control"
                   = error_tag m, :description
-                td
-                  = label m, :delete, "Delete?", class: "control-label"
-                  '
-                  = checkbox m, :delete, style: "vertical-align: text-bottom"
-                td style="vertical-align: top; padding-top: 6px; font-size: larger"
-                  a class="add-modifier" +
+                = if m.data.id do
+
+                  td
+                    = label m, :delete, "Delete?", class: "control-label"
+                    '
+                    = checkbox m, :delete, style: "vertical-align: text-bottom"
+                  td style="vertical-align: top; padding-top: 6px; font-size: larger"
+                    a class="add-modifier" +
+                - else
+
+                  td class="remove-modifier-container"
+                    a href="#" class="remove-modifier" −
+                  td style="vertical-align: top; padding-top: 6px; font-size: larger"
+                    a class="add-modifier" +
 
   / = inputs_for c, :fields, fn f ->
   /

@@ -106,12 +106,12 @@ defmodule D20CharacterKeeper.CharacterController do
 
   defp character_changeset() do
     %Character{fields: [
-      %Field{name: "strength", modifiers: []},
-      %Field{name: "dexterity", modifiers: []},
-      %Field{name: "constitution", modifiers: []},
-      %Field{name: "intelligence", modifiers: []},
-      %Field{name: "wisdom", modifiers: []},
-      %Field{name: "charisma", modifiers: []},
+      %Field{name: "strength"},
+      %Field{name: "dexterity"},
+      %Field{name: "constitution"},
+      %Field{name: "intelligence"},
+      %Field{name: "wisdom"},
+      %Field{name: "charisma"},
     ]}
   end
 end
