@@ -82,14 +82,10 @@
                     = label m, :delete, "Delete?", class: "control-label"
                     '
                     = checkbox m, :delete, style: "vertical-align: text-bottom"
-                  td style="vertical-align: top; padding-top: 6px; font-size: larger"
-                    a class="add-modifier" +
                 - else
 
                   td class="remove-modifier-container"
                     a href="#" class="remove-modifier" −
-                  td style="vertical-align: top; padding-top: 6px; font-size: larger"
-                    a class="add-modifier" +
 
   / = inputs_for c, :fields, fn f ->
   /
