@@ -50,7 +50,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     end
   end
 
-  test "new character form structure is correct" do
+  test "new character form remains the same after failed validation" do
     navigate_to "/characters/new"
 
     add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
@@ -74,15 +74,41 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     ] =
       find_all_elements(:css, "table#ability-scores-form tbody tr")
 
-    assert_abil_score_with_mod_row(str_row_1, "strength")
-    assert_mod_row(str_row_2)
-    assert_mod_row(str_row_3)
-    assert_abil_score_with_mod_row(dex_row, "dexterity")
-    assert_abil_score_row(con_row, "constitution")
-    assert_abil_score_with_mod_row(int_row_1, "intelligence")
-    assert_mod_row(int_row_2)
-    assert_abil_score_row(wis_row, "wisdom")
-    assert_abil_score_with_mod_row(cha_row, "charisma")
+    str_row_1 |> assert_abil_score_with_mod_row("strength")
+    str_row_2 |> assert_mod_row
+    str_row_3 |> assert_mod_row
+    dex_row   |> assert_abil_score_with_mod_row("dexterity")
+    con_row   |> assert_abil_score_row("constitution")
+    int_row_1 |> assert_abil_score_with_mod_row("intelligence")
+    int_row_2 |> assert_mod_row
+    wis_row   |> assert_abil_score_row("wisdom")
+    cha_row   |> assert_abil_score_with_mod_row("charisma")
+
+    # submit form
+    submit = find_element(:css, "button[type=submit]")
+    submit |> click
+
+    assert visible_page_text =~
+      "Oops, something went wrong! Please check the errors below."
+
+    [ str_row_1, str_row_2, str_row_3,
+      dex_row,
+      con_row,
+      int_row_1, int_row_2,
+      wis_row,
+      cha_row
+    ] =
+      find_all_elements(:css, "table#ability-scores-form tbody tr")
+
+    str_row_1 |> assert_abil_score_with_mod_row("strength")
+    str_row_2 |> assert_mod_row
+    str_row_3 |> assert_mod_row
+    dex_row   |> assert_abil_score_with_mod_row("dexterity")
+    con_row   |> assert_abil_score_row("constitution")
+    int_row_1 |> assert_abil_score_with_mod_row("intelligence")
+    int_row_2 |> assert_mod_row
+    wis_row   |> assert_abil_score_row("wisdom")
+    cha_row   |> assert_abil_score_with_mod_row("charisma")
   end
 
   test "failed validation" do
