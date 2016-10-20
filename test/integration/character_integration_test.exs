@@ -65,24 +65,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     add_int |> click
     add_cha |> click
 
-    [ str_row_1, str_row_2, str_row_3,
-      dex_row,
-      con_row,
-      int_row_1, int_row_2,
-      wis_row,
-      cha_row
-    ] =
-      find_all_elements(:css, "table#ability-scores-form tbody tr")
-
-    str_row_1 |> assert_abil_score_with_mod_row("strength")
-    str_row_2 |> assert_mod_row
-    str_row_3 |> assert_mod_row
-    dex_row   |> assert_abil_score_with_mod_row("dexterity")
-    con_row   |> assert_abil_score_row("constitution")
-    int_row_1 |> assert_abil_score_with_mod_row("intelligence")
-    int_row_2 |> assert_mod_row
-    wis_row   |> assert_abil_score_row("wisdom")
-    cha_row   |> assert_abil_score_with_mod_row("charisma")
+    assert_abil_score_table
 
     # submit form
     submit = find_element(:css, "button[type=submit]")
@@ -90,25 +73,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
 
     assert visible_page_text =~
       "Oops, something went wrong! Please check the errors below."
-
-    [ str_row_1, str_row_2, str_row_3,
-      dex_row,
-      con_row,
-      int_row_1, int_row_2,
-      wis_row,
-      cha_row
-    ] =
-      find_all_elements(:css, "table#ability-scores-form tbody tr")
-
-    str_row_1 |> assert_abil_score_with_mod_row("strength")
-    str_row_2 |> assert_mod_row
-    str_row_3 |> assert_mod_row
-    dex_row   |> assert_abil_score_with_mod_row("dexterity")
-    con_row   |> assert_abil_score_row("constitution")
-    int_row_1 |> assert_abil_score_with_mod_row("intelligence")
-    int_row_2 |> assert_mod_row
-    wis_row   |> assert_abil_score_row("wisdom")
-    cha_row   |> assert_abil_score_with_mod_row("charisma")
+    assert_abil_score_table
   end
 
   test "failed validation" do
@@ -120,6 +85,27 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
 
     assert visible_page_text =~
       "Oops, something went wrong! Please check the errors below."
+  end
+
+  defp assert_abil_score_table do
+    [ str_row_1, str_row_2, str_row_3,
+      dex_row,
+      con_row,
+      int_row_1, int_row_2,
+      wis_row,
+      cha_row
+    ] =
+      find_all_elements(:css, "table#ability-scores-form tbody tr")
+
+    str_row_1 |> assert_abil_score_with_mod_row("strength")
+    str_row_2 |> assert_mod_row
+    str_row_3 |> assert_mod_row
+    dex_row   |> assert_abil_score_with_mod_row("dexterity")
+    con_row   |> assert_abil_score_row("constitution")
+    int_row_1 |> assert_abil_score_with_mod_row("intelligence")
+    int_row_2 |> assert_mod_row
+    wis_row   |> assert_abil_score_row("wisdom")
+    cha_row   |> assert_abil_score_with_mod_row("charisma")
   end
 
   defp assert_abil_score_row(row, abil) do
