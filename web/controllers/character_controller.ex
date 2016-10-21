@@ -62,13 +62,8 @@ defmodule D20CharacterKeeper.CharacterController do
 
   def edit(conn, %{"id" => id}) do
     character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
-    stats = character.fields |> Enum.map(&({String.to_atom(&1.name), &1}))
-    stats =
-      ~w(strength dexterity constitution intelligence wisdom charisma)a
-      |> Enum.map(&({&1, stats[&1]}))
-      |> Enum.with_index
     changeset = Character.changeset(character)
-    params = %{character: character, changeset: changeset, stats: stats}
+    params = %{character: character, changeset: changeset}
 
     render(conn, "edit.html", params)
   end
