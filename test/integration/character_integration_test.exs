@@ -54,22 +54,28 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     end
   end
 
-  test "new character form structure and validations", %{conn: _conn} do
+  test "new form" do
     navigate_to "/characters/new"
 
     add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
     add_mod_trigs = find_all_elements(:css, add_mod_selector)
     [add_str, add_dex, _add_con, add_int, _add_wis, add_cha] = add_mod_trigs
 
-    add_str |> click
-    add_str |> click
-    add_str |> click
-    add_dex |> click
-    add_int |> click
-    add_int |> click
-    add_cha |> click
+    [add_str, add_str, add_str, add_dex, add_int, add_int, add_cha]
+    |> Enum.map(fn trig -> trig |> click end)
 
     assert_abil_score_table
+  end
+
+  test "new form failed validation" do
+    navigate_to "/characters/new"
+
+    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
+    add_mod_trigs = find_all_elements(:css, add_mod_selector)
+    [add_str, add_dex, _add_con, add_int, _add_wis, add_cha] = add_mod_trigs
+
+    [add_str, add_str, add_str, add_dex, add_int, add_int, add_cha]
+    |> Enum.map(fn trig -> trig |> click end)
 
     # submit form
     submit = find_element(:css, "button[type=submit]")
@@ -78,6 +84,17 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     assert_abil_score_table(%{failed_validation: true, edit: false})
     assert visible_page_text =~
       "Oops, something went wrong! Please check the errors below."
+  end
+
+  test "new character", %{conn: _conn} do
+    navigate_to "/characters/new"
+
+    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
+    add_mod_trigs = find_all_elements(:css, add_mod_selector)
+    [add_str, add_dex, _add_con, add_int, _add_wis, add_cha] = add_mod_trigs
+
+    [add_str, add_str, add_str, add_dex, add_int, add_int, add_cha]
+    |> Enum.map(fn trig -> trig |> click end)
 
     fill_form
 
@@ -88,33 +105,16 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     assert visible_page_text =~ "Character created successfully."
   end
 
-  test "edit character", %{conn: _conn} do
-    Repo.insert!(
-      %Character{name: "Bob", player: "Joe", character_level: 1, fields: [
-        %Field{name: "strength", value: 1, modifiers: [
-          %Modifier{value: 1, description: "desc"},
-          %Modifier{value: 2, description: "desc"},
-          %Modifier{value: 3, description: "desc"}
-        ]},
-        %Field{name: "dexterity", value: 2, modifiers: [
-          %Modifier{value: 4, description: "desc"}
-        ]},
-        %Field{name: "constitution", value: 3},
-        %Field{name: "intelligence", value: 4, modifiers: [
-          %Modifier{value: 5, description: "desc"},
-          %Modifier{value: 6, description: "desc"}
-        ]},
-        %Field{name: "wisdom", value: 5},
-        %Field{name: "charisma", value: 6, modifiers: [
-          %Modifier{value: 7, description: "desc"}
-        ]}
-      ]}
-    )
-
-    navigate_to "/"
-    find_element(:link_text, "Edit") |> click
+  test "edit form" do
+    character = generate_character
+    navigate_to "/characters/#{character.id}/edit"
 
     assert_abil_score_table(%{failed_validation: false, edit: true})
+  end
+
+  test "edit form failed validation" do
+    character = generate_character
+    navigate_to "/characters/#{character.id}/edit"
 
     fields = find_all_elements(:css, "input[type=text], input[type=number]")
     for f <- fields, do: clear_field(f)
@@ -123,7 +123,20 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     submit = find_element(:css, "button[type=submit]")
     submit |> click
 
+    assert visible_page_text =~
+      "Oops, something went wrong! Please check the errors below."
     assert_abil_score_table(%{failed_validation: true, edit: true})
+  end
+
+  test "edit character", %{conn: _conn} do
+    character = generate_character
+    navigate_to "/characters/#{character.id}/edit"
+
+    # submit form
+    submit = find_element(:css, "button[type=submit]")
+    submit |> click
+
+    assert visible_page_text =~ "Character updated successfully."
   end
 
   defp assert_abil_score_table(
@@ -243,5 +256,29 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     fill_field({:id, "character_fields_3_modifiers_0_description"}, "five")
     fill_field({:id, "character_fields_3_modifiers_1_description"}, "six")
     fill_field({:id, "character_fields_5_modifiers_0_description"}, "seven")
+  end
+
+  defp generate_character do
+    Repo.insert!(
+      %Character{name: "Bob", player: "Joe", character_level: 1, fields: [
+        %Field{name: "strength", value: 1, modifiers: [
+          %Modifier{value: 1, description: "desc"},
+          %Modifier{value: 2, description: "desc"},
+          %Modifier{value: 3, description: "desc"}
+        ]},
+        %Field{name: "dexterity", value: 2, modifiers: [
+          %Modifier{value: 4, description: "desc"}
+        ]},
+        %Field{name: "constitution", value: 3},
+        %Field{name: "intelligence", value: 4, modifiers: [
+          %Modifier{value: 5, description: "desc"},
+          %Modifier{value: 6, description: "desc"}
+        ]},
+        %Field{name: "wisdom", value: 5},
+        %Field{name: "charisma", value: 6, modifiers: [
+          %Modifier{value: 7, description: "desc"}
+        ]}
+      ]}
+    )
   end
 end
