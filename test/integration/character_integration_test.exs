@@ -1,6 +1,10 @@
 defmodule D20CharacterKeeper.CharacterIntegrationTest do
   use D20CharacterKeeper.ConnCase
 
+  alias D20CharacterKeeper.Character
+  alias D20CharacterKeeper.Field
+  alias D20CharacterKeeper.Modifier
+
   # Import Hound helpers
   use Hound.Helpers
 
@@ -82,10 +86,44 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     submit |> click
 
     assert visible_page_text =~ "Character created successfully."
+  end
 
+  test "edit character", %{conn: _conn} do
+    Repo.insert!(
+      %Character{name: "Bob", player: "Joe", character_level: 1, fields: [
+        %Field{name: "strength", value: 1, modifiers: [
+          %Modifier{value: 1, description: "desc"},
+          %Modifier{value: 2, description: "desc"},
+          %Modifier{value: 3, description: "desc"}
+        ]},
+        %Field{name: "dexterity", value: 2, modifiers: [
+          %Modifier{value: 4, description: "desc"}
+        ]},
+        %Field{name: "constitution", value: 3},
+        %Field{name: "intelligence", value: 4, modifiers: [
+          %Modifier{value: 5, description: "desc"},
+          %Modifier{value: 6, description: "desc"}
+        ]},
+        %Field{name: "wisdom", value: 5},
+        %Field{name: "charisma", value: 6, modifiers: [
+          %Modifier{value: 7, description: "desc"}
+        ]}
+      ]}
+    )
+
+    navigate_to "/"
     find_element(:link_text, "Edit") |> click
 
     assert_abil_score_table(%{failed_validation: false, edit: true})
+
+    fields = find_all_elements(:css, "input[type=text], input[type=number]")
+    for f <- fields, do: clear_field(f)
+
+    # submit form
+    submit = find_element(:css, "button[type=submit]")
+    submit |> click
+
+    assert_abil_score_table(%{failed_validation: true, edit: true})
   end
 
   defp assert_abil_score_table(
