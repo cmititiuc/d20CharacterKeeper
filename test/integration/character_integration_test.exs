@@ -57,12 +57,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
   test "new form" do
     navigate_to "/characters/new"
 
-    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
-    add_mod_trigs = find_all_elements(:css, add_mod_selector)
-    [add_str, add_dex, _add_con, add_int, _add_wis, add_cha] = add_mod_trigs
-
-    [add_str, add_str, add_str, add_dex, add_int, add_int, add_cha]
-    |> Enum.map(&(click(&1)))
+    add_modifiers
 
     assert_abil_score_table
   end
@@ -70,12 +65,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
   test "new form failed validation" do
     navigate_to "/characters/new"
 
-    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
-    add_mod_trigs = find_all_elements(:css, add_mod_selector)
-    [add_str, add_dex, _add_con, add_int, _add_wis, add_cha] = add_mod_trigs
-
-    [add_str, add_str, add_str, add_dex, add_int, add_int, add_cha]
-    |> Enum.map(fn trig -> trig |> click end)
+    add_modifiers
 
     # submit form
     submit = find_element(:css, "button[type=submit]")
@@ -89,13 +79,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
   test "new character", %{conn: _conn} do
     navigate_to "/characters/new"
 
-    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
-    add_mod_trigs = find_all_elements(:css, add_mod_selector)
-    [add_str, add_dex, _add_con, add_int, _add_wis, add_cha] = add_mod_trigs
-
-    [add_str, add_str, add_str, add_dex, add_int, add_int, add_cha]
-    |> Enum.map(fn trig -> trig |> click end)
-
+    add_modifiers
     fill_form
 
     # submit form
@@ -280,5 +264,14 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
         ]}
       ]}
     )
+  end
+
+  defp add_modifiers do
+    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
+    add_mod_trigs = find_all_elements(:css, add_mod_selector)
+    [add_str, add_dex, _add_con, add_int, _add_wis, add_cha] = add_mod_trigs
+
+    [add_str, add_str, add_str, add_dex, add_int, add_int, add_cha]
+    |> Enum.map(&(click(&1)))
   end
 end
