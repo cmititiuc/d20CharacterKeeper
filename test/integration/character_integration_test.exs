@@ -62,7 +62,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     [add_str, add_dex, _add_con, add_int, _add_wis, add_cha] = add_mod_trigs
 
     [add_str, add_str, add_str, add_dex, add_int, add_int, add_cha]
-    |> Enum.map(fn trig -> trig |> click end)
+    |> Enum.map(&(click(&1)))
 
     assert_abil_score_table
   end
