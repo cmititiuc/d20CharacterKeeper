@@ -18,15 +18,15 @@ defmodule D20CharacterKeeper.Character do
     |> cast(params, [:name, :player, :character_level])
     |> cast_assoc(:fields)
     |> validate_required([:name, :player, :character_level])
-    |> sort_fields
+    |> sort_ability_fields
   end
 
-  defp sort_fields(struct) do
+  defp sort_ability_fields(struct) do
     case Map.has_key?(struct, :data) && is_list(struct.data.fields) do
       false ->
         struct
       true ->
-        fields = struct.data.fields |> Enum.map(&({String.to_atom(&1.name), &1}))
+        fields = Enum.map(struct.data.fields, &({String.to_atom(&1.name), &1}))
         sorted_fields =
           ~w(strength dexterity constitution intelligence wisdom charisma)a
           |> Enum.map(&(fields[&1]))
