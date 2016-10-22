@@ -88,17 +88,29 @@ function remove_modifier(e) {
   var parent_row = $(this).parents('tr')
 
   if (row_contains_ability_score(parent_row)) {
-    // only delete the cells that contain the modifier fields
-    var parent_cell = $(this).parent()
-    parent_cell.prev().remove()
-    parent_cell.prev().remove()
-    parent_cell.remove()
+    (remove_modifier_from_ability_score_row.bind(this))()
   } else {
-    // delete the whole row
     parent_row.remove()
   }
-
   renumber_modifiers()
+}
+
+function remove_modifier_from_ability_score_row() {
+  var parent_cell = $(this).parent()
+  var next_row = $(this).parents('tr').next()
+
+  parent_cell.prev().remove()
+  parent_cell.prev().remove()
+
+  if (!row_contains_ability_score(next_row)) {
+    var $value_cell = next_row.find('td:nth-child(3)')
+    var $description_cell = next_row.find('td:nth-child(4)')
+
+    parent_cell.before($value_cell).before($description_cell)
+    next_row.remove()
+  } else {
+    parent_cell.remove()
+  }
 }
 
 function add_modifier(e) {
@@ -113,7 +125,6 @@ function add_modifier(e) {
     var parent_row = $(this).parents('tr')
     find_last_modifier_row_for(parent_row).after(new_row(modifier_cells))
   }
-
   renumber_modifiers()
 }
 
