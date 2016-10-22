@@ -1,6 +1,8 @@
 defmodule D20CharacterKeeper.Character do
   use D20CharacterKeeper.Web, :model
 
+  @abilities ~w(strength dexterity constitution intelligence wisdom charisma)a
+
   schema "characters" do
     field :name, :string
     field :player, :string
@@ -23,11 +25,9 @@ defmodule D20CharacterKeeper.Character do
 
   defp sort_ability_fields(struct) do
     cond do
-      struct |> has_fields? ->
+      has_fields?(struct) ->
         fields = Enum.map(struct.data.fields, &({String.to_atom(&1.name), &1}))
-        sorted_fields =
-          ~w(strength dexterity constitution intelligence wisdom charisma)a
-          |> Enum.map(&(fields[&1]))
+        sorted_fields = Enum.map(@abilities, &(fields[&1]))
 
         data = Map.put(struct.data, :fields, sorted_fields)
         Map.put(struct, :data, data)
@@ -37,10 +37,7 @@ defmodule D20CharacterKeeper.Character do
   end
 
   defp has_fields?(struct) do
-    if Map.has_key?(struct, :data) do
-      is_list(struct.data.fields) && length(struct.data.fields) >= 1
-    else
-      false
-    end
+    has? = fn fields -> is_list(fields) && length(fields) >= 1 end
+    if Map.has_key?(struct, :data), do: has?.(struct.data.fields), else: false
   end
 end
