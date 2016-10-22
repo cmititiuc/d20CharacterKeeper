@@ -103,7 +103,7 @@ function remove_modifier_from_ability_score_row() {
   parent_cell.prev().remove()
 
   if (!row_contains_ability_score(next_row)) {
-    var mod_cells_selector = 'td:nth-child(3), td:nth-child(4), td:nth-child(5)'
+    var mod_cells_selector = 'td:nth-child(n+3):nth-child(-n+5)'
     var $mod_cells = next_row.find(mod_cells_selector)
 
     parent_cell.before($mod_cells)
