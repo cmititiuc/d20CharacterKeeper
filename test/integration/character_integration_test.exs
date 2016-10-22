@@ -162,6 +162,21 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     assert_abil_score_table(edit: true)
   end
 
+  test "remove modifier from an ability score row" do
+    character = generate_character
+    navigate_to "/characters/#{character.id}/edit"
+
+    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
+    add_mod_trigs = find_all_elements(:css, add_mod_selector)
+    [_add_str, _add_dex, add_con, _add_int, _add_wis, _add_cha] = add_mod_trigs
+
+    add_con |> click
+    add_con |> click
+    find_element(:link_text, "−") |> click
+    con_row = find_element(:css, "table#ability-scores-form tr:nth-child(9)")
+    con_row |> assert_abil_score_with_mod_row("constitution", false, false)
+  end
+
   defp assert_abil_score_table(opts \\ nil) do
     [ str_row_1, str_row_2, str_row_3,
       dex_row,
