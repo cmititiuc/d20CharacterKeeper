@@ -11,6 +11,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
   # Start a Hound session
   hound_session
 
+  # TODO refactor
   test "editing modifiers preserves table structure", %{conn: _conn} do
     no_of_cells = 3
     no_of_cells_with_modifier = 6
@@ -71,7 +72,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     submit = find_element(:css, "button[type=submit]")
     submit |> click
 
-    assert_abil_score_table(%{failed_validation: true, edit: false})
+    assert_abil_score_table(failed_validation: true, edit: false)
     assert visible_page_text =~
       "Oops, something went wrong! Please check the errors below."
   end
@@ -93,7 +94,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     character = generate_character
     navigate_to "/characters/#{character.id}/edit"
 
-    assert_abil_score_table(%{failed_validation: false, edit: true})
+    assert_abil_score_table(failed_validation: false, edit: true)
   end
 
   test "edit form failed validation" do
@@ -109,7 +110,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
 
     assert visible_page_text =~
       "Oops, something went wrong! Please check the errors below."
-    assert_abil_score_table(%{failed_validation: true, edit: true})
+    assert_abil_score_table(failed_validation: true, edit: true)
   end
 
   test "edit character", %{conn: _conn} do
@@ -123,28 +124,65 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     assert visible_page_text =~ "Character updated successfully."
   end
 
-  defp assert_abil_score_table(
-    %{failed_validation: failed_validation, edit: edit}
-      \\ %{failed_validation: false, edit: false}
-  ) do
+  # TODO refactor
+  test "delete modifier", %{conn: _conn} do
+    character = generate_character
+    navigate_to "/characters/#{character.id}/edit"
+
+    # add a mod to dex
+    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
+    add_mod_trigs = find_all_elements(:css, add_mod_selector)
+    [_add_str, add_dex, _add_con, _add_int, _add_wis, _add_cha] = add_mod_trigs
+
+    add_dex |> click
+    row = find_element(:css, "table#ability-scores-form tbody tr:nth-child(9)")
+    value_field = find_within_element(row, :css, "td input[type=number]")
+    fill_field(value_field, "1")
+    desc_field =  find_within_element(row, :css, "td input[type=text]")
+    fill_field(desc_field, "desc")
+
+    # submit form
+    submit = find_element(:css, "button[type=submit]")
+    submit |> click
+
+    assert visible_page_text =~ "Character updated successfully."
+
+    navigate_to "/characters/#{character.id}/edit"
+
+    row = find_element(:css, "table#ability-scores-form tbody tr:nth-child(8)")
+    find_within_element(row, :css, "td input[type=checkbox]") |> click
+
+    # submit form
+    submit = find_element(:css, "button[type=submit]")
+    submit |> click
+
+    assert visible_page_text =~ "Character updated successfully."
+
+    navigate_to "/characters/#{character.id}/edit"
+    assert_abil_score_table(edit: true)
+  end
+
+  defp assert_abil_score_table(opts \\ nil) do
     [ str_row_1, str_row_2, str_row_3,
       dex_row,
       con_row,
       int_row_1, int_row_2,
       wis_row,
       cha_row
-    ] =
-      find_all_elements(:css, "table#ability-scores-form tbody tr")
+    ] = find_all_elements(:css, "table#ability-scores-form tbody tr")
 
-    str_row_1 |> assert_abil_score_with_mod_row("strength", failed_validation, edit)
-    str_row_2 |> assert_mod_row(failed_validation, edit)
-    str_row_3 |> assert_mod_row(failed_validation, edit)
-    dex_row   |> assert_abil_score_with_mod_row("dexterity", failed_validation, edit)
-    con_row   |> assert_abil_score_row("constitution", failed_validation)
-    int_row_1 |> assert_abil_score_with_mod_row("intelligence", failed_validation, edit)
-    int_row_2 |> assert_mod_row(failed_validation, edit)
-    wis_row   |> assert_abil_score_row("wisdom", failed_validation)
-    cha_row   |> assert_abil_score_with_mod_row("charisma", failed_validation, edit)
+    failed_val = opts[:failed_validation]
+    edit = opts[:edit]
+
+    str_row_1 |> assert_abil_score_with_mod_row("strength", failed_val, edit)
+    str_row_2 |> assert_mod_row(failed_val, edit)
+    str_row_3 |> assert_mod_row(failed_val, edit)
+    dex_row   |> assert_abil_score_with_mod_row("dexterity", failed_val, edit)
+    con_row   |> assert_abil_score_row("constitution", failed_val)
+    int_row_1 |> assert_abil_score_with_mod_row("intelligence", failed_val, edit)
+    int_row_2 |> assert_mod_row(failed_val, edit)
+    wis_row   |> assert_abil_score_row("wisdom", failed_val)
+    cha_row   |> assert_abil_score_with_mod_row("charisma", failed_val, edit)
   end
 
   defp assert_abil_score_row(row, abil, failed_val) do
