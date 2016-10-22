@@ -103,14 +103,14 @@ function remove_modifier_from_ability_score_row() {
   parent_cell.prev().remove()
 
   if (!row_contains_ability_score(next_row)) {
-    var $value_cell = next_row.find('td:nth-child(3)')
-    var $description_cell = next_row.find('td:nth-child(4)')
+    var mod_cells_selector = 'td:nth-child(3), td:nth-child(4), td:nth-child(5)'
+    var $mod_cells = next_row.find(mod_cells_selector)
 
-    parent_cell.before($value_cell).before($description_cell)
+    parent_cell.before($mod_cells)
     next_row.remove()
-  } else {
-    parent_cell.remove()
   }
+
+  parent_cell.remove()
 }
 
 function add_modifier(e) {
