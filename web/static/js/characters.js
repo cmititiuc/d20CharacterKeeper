@@ -97,7 +97,7 @@ function remove_modifier(e) {
 
 function remove_modifier_from_ability_score_row() {
   var parent_cell = $(this).parent()
-  var next_row = $(this).parents('tr').next()
+  var next_row = $(this).parents('tr').nextAll('tr').first()
 
   parent_cell.prev().remove()
   parent_cell.prev().remove()
