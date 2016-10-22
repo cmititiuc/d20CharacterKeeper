@@ -23,7 +23,7 @@ defmodule D20CharacterKeeper.Character do
 
   defp sort_ability_fields(struct) do
     cond do
-      has_fields(struct) ->
+      struct |> has_fields? ->
         fields = Enum.map(struct.data.fields, &({String.to_atom(&1.name), &1}))
         sorted_fields =
           ~w(strength dexterity constitution intelligence wisdom charisma)a
@@ -36,7 +36,7 @@ defmodule D20CharacterKeeper.Character do
     end
   end
 
-  defp has_fields(struct) do
+  defp has_fields?(struct) do
     if Map.has_key?(struct, :data) do
       is_list(struct.data.fields) && length(struct.data.fields) >= 1
     else
