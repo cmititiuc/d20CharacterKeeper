@@ -24,7 +24,7 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
 1. Start the webdriver
 
 ```
-$ node_modules/.bin/phantomjs --wd
+node_modules/.bin/phantomjs --wd
 ```
 
 2. Run the tests
