@@ -13,13 +13,22 @@ defmodule D20CharacterKeeper.CharacterController do
     charisma: "CHA"
   ]
 
+  @character %Character{fields: [
+    %Field{name: "strength"},
+    %Field{name: "dexterity"},
+    %Field{name: "constitution"},
+    %Field{name: "intelligence"},
+    %Field{name: "wisdom"},
+    %Field{name: "charisma"},
+  ]}
+
   def index(conn, _params) do
     characters = Repo.all(Character)
     render(conn, "index.html", characters: characters)
   end
 
   def new(conn, _params) do
-    changeset = Character.changeset(%Character{})
+    changeset = Character.changeset(@character)
     render(conn, "new.html", changeset: changeset)
   end
 
@@ -50,7 +59,7 @@ defmodule D20CharacterKeeper.CharacterController do
 
         {field, Map.merge(acc, field_values)}
       end)
-    params = %{character: character, fields: fields, abilities: @abilities}
+    params = [character: character, fields: fields, abilities: @abilities]
 
     render(conn, "show.html", params)
   end
@@ -58,6 +67,7 @@ defmodule D20CharacterKeeper.CharacterController do
   def edit(conn, %{"id" => id}) do
     character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
     changeset = Character.changeset(character)
+
     render(conn, "edit.html", character: character, changeset: changeset)
   end
 

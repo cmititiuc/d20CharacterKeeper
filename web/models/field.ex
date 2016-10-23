@@ -26,6 +26,6 @@ defmodule D20CharacterKeeper.Field do
     struct
     |> cast(params, [:name, :value, :character_id])
     |> cast_assoc(:modifiers)
-    |> validate_required([:name, :value, :character_id])
+    |> validate_required([:name, :value])
   end
 end

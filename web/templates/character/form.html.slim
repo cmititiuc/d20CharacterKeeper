@@ -1,60 +1,93 @@
-= form_for @changeset, @action, fn f ->
+= form_for @changeset, @action, fn c ->
   = if @changeset.action do
 
     div class="alert alert-danger"
       p Oops, something went wrong! Please check the errors below.
 
-  div class="form-group"
-    = label f, :name, class: "control-label"
-    = text_input f, :name, class: "form-control"
-    = error_tag f, :name
+  table
+    tr
+      td= label c, :name, class: "control-label"
+      td
+        = text_input c, :name, class: "form-control"
+        = error_tag c, :name
+    tr
+      td= label c, :player, class: "control-label"
+      td
+        = text_input c, :player, class: "form-control"
+        = error_tag c, :player
+    tr
+      td= label c, :character_level, class: "control-label"
+      td
+        = number_input c, :character_level, class: "form-control"
+        = error_tag c, :character_level
 
-  div class="form-group"
-    = label f, :player, class: "control-label"
-    = text_input f, :player, class: "form-control"
-    = error_tag f, :player
+  table id="ability-scores-form"
+    thead
+      th style="text-align: center" Ability
+      th style="text-align: center" Score
+      th Modifiers
+    tbody
+      = inputs_for c, :fields, fn f ->
 
-  div class="form-group"
-    = label f, :character_level, class: "control-label"
-    = number_input f, :character_level, class: "form-control"
-    = error_tag f, :character_level
+        tr
+          td style="vertical-align: top; padding-top: 10px;"
+            strong= CharacterHelpers.field_name(f)
+          td style="vertical-align: top;"
+            = hidden_input f, :name, class: "form-control"
+            = number_input f, :value, class: "form-control"
+            = error_tag f, :value
 
-  = inputs_for f, :fields, fn field ->
+          = unless CharacterHelpers.field_has_modifiers?(f) do
 
-    h3 Field
-    div class="form-group"
-      = label field, :name, class: "control-label"
-      = text_input field, :name, class: "form-control"
-      = error_tag field, :name
-    div class="form-group"
-      = label field, :value, class: "control-label"
-      = number_input field, :value, class: "form-control"
-      = error_tag field, :value
+            td style="vertical-align: top; padding-top: 6px; font-size: larger"
+              a class="add-modifier" +
 
+          = inputs_for f, :modifiers, fn m ->
+            = if m.index == 0 do
 
-    = inputs_for field, :modifiers, fn m ->
+              td
+                = number_input m, :value, class: "form-control"
+                = error_tag m, :value
+              td
+                = text_input m, :description, class: "form-control"
+                = error_tag m, :description
+              = if m.data.id do
 
-      h4 Modifier
-      div class="form-group"
-        = label m, :value, class: "control-label"
-        = number_input m, :value, class: "form-control"
-        = error_tag m, :value
-      div class="form-group"
-        = label m, :description, class: "control-label"
-        = text_input m, :description, class: "form-control"
-        = error_tag m, :description
-      = if m.data.id do
+                td
+                  = label m, :delete, "Delete?", class: "control-label"
+                  '
+                  = checkbox m, :delete, style: "vertical-align: text-bottom"
+                td style="vertical-align: top; padding-top: 6px; font-size: larger"
+                  a class="add-modifier" +
+              - else
 
-        div style="text-align: right;"
-          = label m, :delete, "Delete?", class: "control-label"
-          '
-          = checkbox m, :delete
-      - else
+                td class="remove-modifier-container"
+                  a href="#" class="remove-modifier" −
+                td style="vertical-align: top; padding-top: 6px; font-size: larger"
+                  a class="add-modifier" +
 
-        div style="text-align: right;"
-          a href="#" class="remove-modifier"
-            | - Remove
+            - else
+              tr
+                td
+                td
+                td
+                  = number_input m, :value, class: "form-control"
+                  = error_tag m, :value
+                td
+                  = text_input m, :description, class: "form-control"
+                  = error_tag m, :description
+                = if m.data.id do
 
+                  td
+                    = label m, :delete, "Delete?", class: "control-label"
+                    '
+                    = checkbox m, :delete, style: "vertical-align: text-bottom"
+                  td
+                - else
+
+                  td class="remove-modifier-container"
+                    a href="#" class="remove-modifier" −
+                  td
 
   div class="form-group"
     = submit "Submit", class: "btn btn-primary"
