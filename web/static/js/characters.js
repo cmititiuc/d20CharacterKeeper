@@ -1,5 +1,3 @@
-import $ from "jquery"
-
 function ability_names() {
   return(
     ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']
@@ -132,4 +130,4 @@ function run() {
   $(document).ready(function() { $('.add-modifier').on('click', add_modifier) })
 }
 
-export var Characters = { run: run }
+export var AbilityScores = { run: run }

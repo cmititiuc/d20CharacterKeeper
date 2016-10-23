@@ -28,4 +28,5 @@ html lang="en"
         = render @view_module, @view_template, assigns
 
     script src="#{static_path(@conn, "/js/app.js")}"
-    script require("web/static/js/characters").Characters.run()
+    script require("web/static/js/app").App.run()
+    = render_existing @view_module, "scripts.html", assigns
