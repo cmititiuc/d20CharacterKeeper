@@ -316,6 +316,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
 
   defp add_modifiers do
     trigs = get_mod_trigs
+
     [ trigs[:str], trigs[:str], trigs[:str],
       trigs[:dex],
       trigs[:int], trigs[:int],
@@ -343,7 +344,7 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
         Enum.reduce(abilities, %{}, fn abil, acc ->
           Map.merge(%{abil => add_links[abil]}, acc)
         end)
-      ability when is_atom(ability) ->
+      ability when not is_nil(ability) and is_atom(ability) ->
         add_links[ability]
       _ ->
         Enum.into(add_links, %{})
