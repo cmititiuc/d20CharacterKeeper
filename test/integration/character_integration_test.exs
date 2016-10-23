@@ -293,23 +293,23 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
   defp generate_character do
     Repo.insert!(
       %Character{name: "Bob", player: "Joe", character_level: 1, fields: [
+        %Field{name: "charisma", value: 6, modifiers: [
+          %Modifier{value: 7, description: "desc"}
+        ]},
+        %Field{name: "wisdom", value: 5},
+        %Field{name: "intelligence", value: 4, modifiers: [
+          %Modifier{value: 5, description: "desc"},
+          %Modifier{value: 6, description: "desc"}
+        ]},
+        %Field{name: "constitution", value: 3},
+        %Field{name: "dexterity", value: 2, modifiers: [
+          %Modifier{value: 4, description: "desc"}
+        ]},
         %Field{name: "strength", value: 1, modifiers: [
           %Modifier{value: 1, description: "desc"},
           %Modifier{value: 2, description: "desc"},
           %Modifier{value: 3, description: "desc"}
         ]},
-        %Field{name: "dexterity", value: 2, modifiers: [
-          %Modifier{value: 4, description: "desc"}
-        ]},
-        %Field{name: "constitution", value: 3},
-        %Field{name: "intelligence", value: 4, modifiers: [
-          %Modifier{value: 5, description: "desc"},
-          %Modifier{value: 6, description: "desc"}
-        ]},
-        %Field{name: "wisdom", value: 5},
-        %Field{name: "charisma", value: 6, modifiers: [
-          %Modifier{value: 7, description: "desc"}
-        ]}
       ]}
     )
   end
