@@ -1,8 +1,6 @@
 defmodule D20CharacterKeeper.Character do
   use D20CharacterKeeper.Web, :model
 
-  @abilities ~w(strength dexterity constitution intelligence wisdom charisma)a
-
   schema "characters" do
     field :name, :string
     field :player, :string
