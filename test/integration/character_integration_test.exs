@@ -129,12 +129,9 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     character = generate_character
     navigate_to "/characters/#{character.id}/edit"
 
-    # add a mod to dex
-    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
-    add_mod_trigs = find_all_elements(:css, add_mod_selector)
-    [_add_str, add_dex, _add_con, _add_int, _add_wis, _add_cha] = add_mod_trigs
-
+    add_dex = get_mod_trigs(:dex)
     add_dex |> click
+
     row = find_element(:css, "table#ability-scores-form tbody tr:nth-child(9)")
     value_field = find_within_element(row, :css, "td input[type=number]")
     fill_field(value_field, "1")
@@ -166,13 +163,11 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
     character = generate_character
     navigate_to "/characters/#{character.id}/edit"
 
-    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
-    add_mod_trigs = find_all_elements(:css, add_mod_selector)
-    [_add_str, _add_dex, add_con, _add_int, _add_wis, _add_cha] = add_mod_trigs
-
+    add_con = get_mod_trigs(:con)
     add_con |> click
     add_con |> click
     find_element(:link_text, "−") |> click
+
     con_row = find_element(:css, "table#ability-scores-form tr:nth-child(9)")
     con_row |> assert_abil_score_with_mod_row("constitution", false, false)
   end
@@ -320,11 +315,38 @@ defmodule D20CharacterKeeper.CharacterIntegrationTest do
   end
 
   defp add_modifiers do
-    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
-    add_mod_trigs = find_all_elements(:css, add_mod_selector)
-    [add_str, add_dex, _add_con, add_int, _add_wis, add_cha] = add_mod_trigs
+    trigs = get_mod_trigs
+    [ trigs[:str], trigs[:str], trigs[:str],
+      trigs[:dex],
+      trigs[:int], trigs[:int],
+      trigs[:cha]
+    ] |> Enum.map(&(click(&1)))
+  end
 
-    [add_str, add_str, add_str, add_dex, add_int, add_int, add_cha]
-    |> Enum.map(&(click(&1)))
+  # use:
+  #   %{con: add_con, str: add_str} = get_mod_trigs([:con, :str])
+  #   add_con |> click
+  #   add_str |> click
+  #
+  #   trigs = get_mod_trigs
+  #   trigs[:con] |> click
+  #   trigs[:int] |> click
+  #
+  #   get_mod_trigs(:con) |> click
+  defp get_mod_trigs(abilities \\ nil) do
+    add_mod_selector = "table#ability-scores-form tbody tr td a.add-modifier"
+    [str, dex, con, int, wis, cha] = find_all_elements(:css, add_mod_selector)
+    add_links = [str: str, dex: dex, con: con, int: int, wis: wis, cha: cha]
+
+    case abilities do
+      _abilites when is_list(abilities) and length(abilities) > 1 ->
+        Enum.reduce(abilities, %{}, fn abil, acc ->
+          Map.merge(%{abil => add_links[abil]}, acc)
+        end)
+      ability when is_atom(ability) ->
+        add_links[ability]
+      _ ->
+        Enum.into(add_links, %{})
+    end
   end
 end
