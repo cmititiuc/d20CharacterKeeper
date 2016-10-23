@@ -13,19 +13,23 @@ defmodule D20CharacterKeeper.CharacterController do
     charisma: "CHA"
   ]
 
+  @character %Character{fields: [
+    %Field{name: "strength"},
+    %Field{name: "dexterity"},
+    %Field{name: "constitution"},
+    %Field{name: "intelligence"},
+    %Field{name: "wisdom"},
+    %Field{name: "charisma"},
+  ]}
+
   def index(conn, _params) do
     characters = Repo.all(Character)
     render(conn, "index.html", characters: characters)
   end
 
   def new(conn, _params) do
-    changeset = Character.changeset(character_changeset)
-    stats = changeset.data.fields |> Enum.map(&({String.to_atom(&1.name), &1}))
-    stats =
-      ~w(strength dexterity constitution intelligence wisdom charisma)a
-      |> Enum.map(&({&1, stats[&1]}))
-      |> Enum.with_index
-    render(conn, "new.html", changeset: changeset, stats: stats)
+    changeset = Character.changeset(@character)
+    render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"character" => character_params}) do
@@ -55,7 +59,7 @@ defmodule D20CharacterKeeper.CharacterController do
 
         {field, Map.merge(acc, field_values)}
       end)
-    params = %{character: character, fields: fields, abilities: @abilities}
+    params = [character: character, fields: fields, abilities: @abilities]
 
     render(conn, "show.html", params)
   end
@@ -63,17 +67,12 @@ defmodule D20CharacterKeeper.CharacterController do
   def edit(conn, %{"id" => id}) do
     character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
     changeset = Character.changeset(character)
-    params = %{character: character, changeset: changeset}
 
-    render(conn, "edit.html", params)
+    render(conn, "edit.html", character: character, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "character" => character_params}) do
     character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
-    stats = character.fields |> Enum.map(&({String.to_atom(&1.name), &1}))
-    stats =
-      ~w(strength dexterity constitution intelligence wisdom charisma)a
-      |> Enum.map(&({&1, stats[&1]}))
     changeset = Character.changeset(character, character_params)
 
     case Repo.update(changeset) do
@@ -82,8 +81,7 @@ defmodule D20CharacterKeeper.CharacterController do
         |> put_flash(:info, "Character updated successfully.")
         |> redirect(to: character_path(conn, :show, character))
       {:error, changeset} ->
-        params = %{character: character, changeset: changeset, stats: stats}
-        render(conn, "edit.html", params)
+        render(conn, "edit.html", character: character, changeset: changeset)
     end
   end
 
@@ -97,16 +95,5 @@ defmodule D20CharacterKeeper.CharacterController do
     conn
     |> put_flash(:info, "Character deleted successfully.")
     |> redirect(to: character_path(conn, :index))
-  end
-
-  defp character_changeset() do
-    %Character{fields: [
-      %Field{name: "strength"},
-      %Field{name: "dexterity"},
-      %Field{name: "constitution"},
-      %Field{name: "intelligence"},
-      %Field{name: "wisdom"},
-      %Field{name: "charisma"},
-    ]}
   end
 end
