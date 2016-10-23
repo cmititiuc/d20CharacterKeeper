@@ -37,7 +37,7 @@
             = number_input f, :value, class: "form-control"
             = error_tag f, :value
 
-          = unless (f.data.modifiers |> is_list && length(f.data.modifiers) != 0) || (f.source.changes[:modifiers] |> is_list) do
+          = unless CharacterHelpers.field_has_modifiers?(f) do
 
             td style="vertical-align: top; padding-top: 6px; font-size: larger"
               a class="add-modifier" +
@@ -88,42 +88,6 @@
                   td class="remove-modifier-container"
                     a href="#" class="remove-modifier" −
                   td
-
-  / = inputs_for c, :fields, fn f ->
-  /
-  /   h3 Field
-  /   div class="form-group"
-  /     = label f, :name, class: "control-label"
-  /     = text_input f, :name, class: "form-control"
-  /     = error_tag f, :name
-  /   div class="form-group"
-  /     = label f, :value, class: "control-label"
-  /     = number_input f, :value, class: "form-control"
-  /     = error_tag f, :value
-  /
-  /   = inputs_for f, :modifiers, fn m ->
-  /
-  /     .modifier
-  /       h4 Modifier
-  /       div class="form-group"
-  /         = label m, :value, class: "control-label"
-  /         = number_input m, :value, class: "form-control"
-  /         = error_tag m, :value
-  /       div class="form-group"
-  /         = label m, :description, class: "control-label"
-  /         = text_input m, :description, class: "form-control"
-  /         = error_tag m, :description
-  /       = if m.data.id do
-  /
-  /         div style="vertical-align: bottom; display: inline-block"
-  /           = label m, :delete, "Delete?", class: "control-label"
-  /           '
-  /           = checkbox m, :delete, style: "vertical-align: text-bottom"
-  /       - else
-  /
-  /         div style="text-align: right;"
-  /           a href="#" class="remove-modifier"
-  /             | - Remove
 
   div class="form-group"
     = submit "Submit", class: "btn btn-primary"
