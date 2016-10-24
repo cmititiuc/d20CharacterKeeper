@@ -47,8 +47,8 @@ defmodule D20CharacterKeeper.CharacterController do
 
   def show(conn, %{"id" => id}) do
     character = Repo.get!(Character, id) |> Repo.preload([fields: :modifiers])
-    {_output, fields} =
-      Enum.map_reduce(character.fields, %{}, fn(field, acc) ->
+    fields =
+      Enum.reduce(character.fields, %{}, fn(field, acc) ->
         field_values = %{field.name => %{
           modified_value: Field.modified_value(field),
           value: field.value,
@@ -57,7 +57,7 @@ defmodule D20CharacterKeeper.CharacterController do
           end)
         }}
 
-        {field, Map.merge(acc, field_values)}
+        Map.merge(acc, field_values)
       end)
     params = [character: character, fields: fields, abilities: @abilities]
 
