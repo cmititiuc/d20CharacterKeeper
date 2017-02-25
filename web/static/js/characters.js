@@ -1,7 +1,7 @@
 import $ from "jquery"
 
 function ability_names() {
-  return(
+  return (
     ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']
   )
 }
